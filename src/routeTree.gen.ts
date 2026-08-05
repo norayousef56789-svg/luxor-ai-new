@@ -9,74 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AskLuxorRouteImport } from './routes/ask-luxor'
-import { Route as AttractionsRouteImport } from './routes/attractions'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as BazaarsRouteImport } from './routes/bazaars'
-import { Route as BusinessesRouteImport } from './routes/businesses'
-import { Route as EventsRouteImport } from './routes/events'
-import { Route as HotelsRouteImport } from './routes/hotels'
-import { Route as ItinerariesRouteImport } from './routes/itineraries'
-import { Route as MapRouteImport } from './routes/map'
 import { Route as RestaurantsRouteImport } from './routes/restaurants'
-import { Route as ApiChatRouteImport } from './routes/api/chat'
-import { Route as ApiMarketingRouteImport } from './routes/api/marketing'
-import { Route as AttractionsSlugRouteImport } from './routes/attractions.$slug'
-import { Route as BusinessDashboardRouteImport } from './routes/business.dashboard'
-import { Route as BusinessLoginRouteImport } from './routes/business.login'
-import { Route as BusinessRegisterRouteImport } from './routes/business.register'
+import { Route as MapRouteImport } from './routes/map'
+import { Route as ItinerariesRouteImport } from './routes/itineraries'
+import { Route as HotelsRouteImport } from './routes/hotels'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as BusinessesRouteImport } from './routes/businesses'
+import { Route as BazaarsRouteImport } from './routes/bazaars'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AttractionsRouteImport } from './routes/attractions'
+import { Route as AskLuxorRouteImport } from './routes/ask-luxor'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as BusinessesIdRouteImport } from './routes/businesses.$id'
+import { Route as BusinessRegisterRouteImport } from './routes/business.register'
+import { Route as BusinessLoginRouteImport } from './routes/business.login'
+import { Route as BusinessDashboardRouteImport } from './routes/business.dashboard'
+import { Route as AttractionsSlugRouteImport } from './routes/attractions.$slug'
+import { Route as ApiMarketingRouteImport } from './routes/api/marketing'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AskLuxorRoute = AskLuxorRouteImport.update({
-  id: '/ask-luxor',
-  path: '/ask-luxor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AttractionsRoute = AttractionsRouteImport.update({
-  id: '/attractions',
-  path: '/attractions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BazaarsRoute = BazaarsRouteImport.update({
-  id: '/bazaars',
-  path: '/bazaars',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BusinessesRoute = BusinessesRouteImport.update({
-  id: '/businesses',
-  path: '/businesses',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HotelsRoute = HotelsRouteImport.update({
-  id: '/hotels',
-  path: '/hotels',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ItinerariesRoute = ItinerariesRouteImport.update({
-  id: '/itineraries',
-  path: '/itineraries',
+const RestaurantsRoute = RestaurantsRouteImport.update({
+  id: '/restaurants',
+  path: '/restaurants',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapRoute = MapRouteImport.update({
@@ -84,29 +39,64 @@ const MapRoute = MapRouteImport.update({
   path: '/map',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RestaurantsRoute = RestaurantsRouteImport.update({
-  id: '/restaurants',
-  path: '/restaurants',
+const ItinerariesRoute = ItinerariesRouteImport.update({
+  id: '/itineraries',
+  path: '/itineraries',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiChatRoute = ApiChatRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
+const HotelsRoute = HotelsRouteImport.update({
+  id: '/hotels',
+  path: '/hotels',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiMarketingRoute = ApiMarketingRouteImport.update({
-  id: '/api/marketing',
-  path: '/api/marketing',
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AttractionsSlugRoute = AttractionsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => AttractionsRoute,
+const BusinessesRoute = BusinessesRouteImport.update({
+  id: '/businesses',
+  path: '/businesses',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const BusinessDashboardRoute = BusinessDashboardRouteImport.update({
-  id: '/business/dashboard',
-  path: '/business/dashboard',
+const BazaarsRoute = BazaarsRouteImport.update({
+  id: '/bazaars',
+  path: '/bazaars',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AttractionsRoute = AttractionsRouteImport.update({
+  id: '/attractions',
+  path: '/attractions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AskLuxorRoute = AskLuxorRouteImport.update({
+  id: '/ask-luxor',
+  path: '/ask-luxor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessesIdRoute = BusinessesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BusinessesRoute,
+} as any)
+const BusinessRegisterRoute = BusinessRegisterRouteImport.update({
+  id: '/business/register',
+  path: '/business/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessLoginRoute = BusinessLoginRouteImport.update({
@@ -114,15 +104,25 @@ const BusinessLoginRoute = BusinessLoginRouteImport.update({
   path: '/business/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BusinessRegisterRoute = BusinessRegisterRouteImport.update({
-  id: '/business/register',
-  path: '/business/register',
+const BusinessDashboardRoute = BusinessDashboardRouteImport.update({
+  id: '/business/dashboard',
+  path: '/business/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BusinessesIdRoute = BusinessesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => BusinessesRoute,
+const AttractionsSlugRoute = AttractionsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AttractionsRoute,
+} as any)
+const ApiMarketingRoute = ApiMarketingRouteImport.update({
+  id: '/api/marketing',
+  path: '/api/marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -277,74 +277,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ask-luxor': {
-      id: '/ask-luxor'
-      path: '/ask-luxor'
-      fullPath: '/ask-luxor'
-      preLoaderRoute: typeof AskLuxorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/attractions': {
-      id: '/attractions'
-      path: '/attractions'
-      fullPath: '/attractions'
-      preLoaderRoute: typeof AttractionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bazaars': {
-      id: '/bazaars'
-      path: '/bazaars'
-      fullPath: '/bazaars'
-      preLoaderRoute: typeof BazaarsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/businesses': {
-      id: '/businesses'
-      path: '/businesses'
-      fullPath: '/businesses'
-      preLoaderRoute: typeof BusinessesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hotels': {
-      id: '/hotels'
-      path: '/hotels'
-      fullPath: '/hotels'
-      preLoaderRoute: typeof HotelsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/itineraries': {
-      id: '/itineraries'
-      path: '/itineraries'
-      fullPath: '/itineraries'
-      preLoaderRoute: typeof ItinerariesRouteImport
+    '/restaurants': {
+      id: '/restaurants'
+      path: '/restaurants'
+      fullPath: '/restaurants'
+      preLoaderRoute: typeof RestaurantsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/map': {
@@ -354,39 +291,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/restaurants': {
-      id: '/restaurants'
-      path: '/restaurants'
-      fullPath: '/restaurants'
-      preLoaderRoute: typeof RestaurantsRouteImport
+    '/itineraries': {
+      id: '/itineraries'
+      path: '/itineraries'
+      fullPath: '/itineraries'
+      preLoaderRoute: typeof ItinerariesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
+    '/hotels': {
+      id: '/hotels'
+      path: '/hotels'
+      fullPath: '/hotels'
+      preLoaderRoute: typeof HotelsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/marketing': {
-      id: '/api/marketing'
-      path: '/api/marketing'
-      fullPath: '/api/marketing'
-      preLoaderRoute: typeof ApiMarketingRouteImport
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/attractions/$slug': {
-      id: '/attractions/$slug'
-      path: '/$slug'
-      fullPath: '/attractions/$slug'
-      preLoaderRoute: typeof AttractionsSlugRouteImport
-      parentRoute: typeof AttractionsRoute
+    '/businesses': {
+      id: '/businesses'
+      path: '/businesses'
+      fullPath: '/businesses'
+      preLoaderRoute: typeof BusinessesRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/business/dashboard': {
-      id: '/business/dashboard'
-      path: '/business/dashboard'
-      fullPath: '/business/dashboard'
-      preLoaderRoute: typeof BusinessDashboardRouteImport
+    '/bazaars': {
+      id: '/bazaars'
+      path: '/bazaars'
+      fullPath: '/bazaars'
+      preLoaderRoute: typeof BazaarsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/attractions': {
+      id: '/attractions'
+      path: '/attractions'
+      fullPath: '/attractions'
+      preLoaderRoute: typeof AttractionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ask-luxor': {
+      id: '/ask-luxor'
+      path: '/ask-luxor'
+      fullPath: '/ask-luxor'
+      preLoaderRoute: typeof AskLuxorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/businesses/$id': {
+      id: '/businesses/$id'
+      path: '/$id'
+      fullPath: '/businesses/$id'
+      preLoaderRoute: typeof BusinessesIdRouteImport
+      parentRoute: typeof BusinessesRoute
+    }
+    '/business/register': {
+      id: '/business/register'
+      path: '/business/register'
+      fullPath: '/business/register'
+      preLoaderRoute: typeof BusinessRegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business/login': {
@@ -396,19 +382,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusinessLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/business/register': {
-      id: '/business/register'
-      path: '/business/register'
-      fullPath: '/business/register'
-      preLoaderRoute: typeof BusinessRegisterRouteImport
+    '/business/dashboard': {
+      id: '/business/dashboard'
+      path: '/business/dashboard'
+      fullPath: '/business/dashboard'
+      preLoaderRoute: typeof BusinessDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/businesses/$id': {
-      id: '/businesses/$id'
-      path: '/$id'
-      fullPath: '/businesses/$id'
-      preLoaderRoute: typeof BusinessesIdRouteImport
-      parentRoute: typeof BusinessesRoute
+    '/attractions/$slug': {
+      id: '/attractions/$slug'
+      path: '/$slug'
+      fullPath: '/attractions/$slug'
+      preLoaderRoute: typeof AttractionsSlugRouteImport
+      parentRoute: typeof AttractionsRoute
+    }
+    '/api/marketing': {
+      id: '/api/marketing'
+      path: '/api/marketing'
+      fullPath: '/api/marketing'
+      preLoaderRoute: typeof ApiMarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
