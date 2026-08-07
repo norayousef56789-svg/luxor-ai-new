@@ -1,25 +1,24 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Shield, LogOut, User, Menu } from "lucide-react";
+import { Sparkles, Shield, LogOut, User, Menu, Globe } from "lucide-react";
 import { useState } from "react";
 import { useAuth, signOut } from "@/lib/auth";
-
-const tourist = [
-  { to: "/attractions", label: "Attractions" },
-  { to: "/itineraries", label: "Itineraries" },
-  { to: "/hotels", label: "Hotels" },
-  { to: "/restaurants", label: "Restaurants" },
-  { to: "/bazaars", label: "Bazaars" },
-  { to: "/events", label: "Events" },
-  { to: "/businesses", label: "Businesses" },
-  { to: "/map", label: "Map" },
-] as const;
-
+import { useTranslation } from "react-i18next";
 export function Header() {
   const { user, roles } = useAuth();
   const [open, setOpen] = useState(false);
   const isAdmin = roles.includes("admin");
   const isBusiness = roles.includes("business");
-
+  const { t, i18n } = useTranslation();
+const tourist = [
+{ to: "/attractions", label: t("attractions") },
+{ to: "/itineraries", label: t("itineraries") },
+{ to: "/hotels", label: t("hotels") },
+{ to: "/restaurants", label: t("restaurants") },
+{ to: "/bazaars", label: t("bazaars") },
+{ to: "/events", label: t("events") },
+{ to: "/businesses", label: t("businesses") },
+{ to: "/map", label: t("map") },
+] as const;
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-midnight/70">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
@@ -44,12 +43,23 @@ export function Header() {
           ))}
           {isAdmin && (
             <Link to="/admin" className="text-foreground/75 hover:text-gold inline-flex items-center gap-1" activeProps={{ className: "text-gold" }}>
-              <Shield className="h-3.5 w-3.5" /> Admin
+              <Shield className="h-3.5 w-3.5" /> {t("admin")}
             </Link>
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1">
+  <Globe className="h-4 w-4 shrink-0 text-gold" />
+
+  <select
+    value={i18n.language?.split("-")[0] || "en"}
+    onChange={(e) => i18n.changeLanguage(e.target.value)}
+    className="shrink-0 rounded-md border border-gold/40 bg-midnight px-2 py-1 text-sm text-foreground"
+  >
+    <option value="en">English</option>
+    <option value="ar">العربية</option>
+    <option value="zh">中文</option>
+  </select>
           {user ? (
             <div className="hidden md:flex items-center gap-2">
               {isBusiness && (
@@ -58,21 +68,25 @@ export function Header() {
                 </Link>
               )}
               <button onClick={() => signOut()} className="inline-flex items-center gap-1.5 text-xs text-foreground/70 hover:text-gold">
-                <LogOut className="h-3.5 w-3.5" /> Sign out
+                <LogOut className="h-3.5 w-3.5" /> {t("signOut")}
               </button>
             </div>
           ) : (
-            <Link to="/auth" className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-border/60 px-3 py-1.5 text-xs text-foreground/80 hover:text-gold hover:border-gold/40">
-              <User className="h-3.5 w-3.5" /> Sign in
+            <Link
+  to="/auth"
+  search={{ redirect: undefined, mode: "sign-in" }}
+  className="hidden md:inline-flex items-center gap-2"
+>
+              <User className="h-3.5 w-3.5" /> {t("signIn")}
             </Link>
           )}
 
-          <Link
-            to="/ask-luxor"
-            className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-primary-foreground shadow-gold"
-          >
-            <Sparkles className="h-4 w-4" /> Ask Luxor AI
-          </Link>
+         <Link
+  to="/ask-luxor"
+  className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-primary-foreground shadow-gold"
+>
+  <Sparkles className="h-4 w-4" /> {t("askLuxorAI")}
+</Link> 
 
           <button onClick={() => setOpen((v) => !v)} className="xl:hidden p-2 text-foreground/70 hover:text-gold">
             <Menu className="h-5 w-5" />
@@ -88,12 +102,30 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link to="/ask-luxor" onClick={() => setOpen(false)} className="text-gold py-1.5">Ask Luxor AI</Link>
-            {isBusiness && <Link to="/business/dashboard" onClick={() => setOpen(false)} className="text-gold py-1.5">Business Dashboard</Link>}
-            {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="text-gold py-1.5">Admin</Link>}
-            {!user && <Link to="/auth" onClick={() => setOpen(false)} className="text-gold py-1.5">Sign in / Sign up</Link>}
+            <Link to="/ask-luxor" onClick={() => setOpen(false)} className="text-gold py-1.5">
+  {t("askLuxorAI")}
+</Link>
+ {isBusiness && (
+  <Link
+    to="/business/dashboard"
+    onClick={() => setOpen(false)}
+    className="text-gold py-1.5"
+  >
+    {t("businessDashboard")}
+  </Link>
+)}
+            <Link
+  to="/auth"
+  search={{redirect: undefined, mode: "sign-in"}}
+  onClick={() => setOpen(false)}
+  className="text-gold py-1.5"
+>
+  {t("signIn")}
+</Link>
             {user && (
-              <button onClick={() => { setOpen(false); signOut(); }} className="text-left text-foreground/70 py-1.5">Sign out</button>
+              <button onClick={() => { setOpen(false); signOut(); }} className="text-left text-foreground/70 py-1.5">
+                {t("signOut")}
+              </button>
             )}
           </div>
         </div>
@@ -101,3 +133,4 @@ export function Header() {
     </header>
   );
 }
+                                     

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { ArrowRight, MapPin, Sparkles, Compass, BookOpen, Store, CalendarDays, Tag } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import karnakHero from "@/assets/karnak.jpg";
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { t } = useTranslation();
   const { data: featured } = useQuery({
     queryKey: ["featured-attractions"],
     queryFn: async () => {
@@ -44,10 +46,10 @@ function Home() {
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link to="/attractions" className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-sm font-medium text-primary-foreground shadow-gold">
-              Explore attractions <ArrowRight className="h-4 w-4" />
+              {t("exploreAttractions")} <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/ask-luxor" className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-midnight/40 backdrop-blur px-6 py-3 text-sm font-medium text-gold hover:bg-midnight/60">
-              <Sparkles className="h-4 w-4" /> Ask Luxor AI
+              <Sparkles className="h-4 w-4" /> {t("askLuxorAI")}
             </Link>
             <Link to="/business/register" className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-midnight/40 backdrop-blur px-6 py-3 text-sm font-medium text-foreground/80 hover:text-gold">
               <Store className="h-4 w-4" /> List your business
