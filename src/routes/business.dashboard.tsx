@@ -28,12 +28,28 @@ function Dashboard() {
   const { user, loading, roles } = useAuth();
   const [tab, setTab] = useState<Tab>("businesses");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/business/login" });
-  }, [loading, user, navigate]);
+  console.log("AUTH CHECK:", {
+    loading,
+    user: user?.email,
+    roles,
+  });
 
-  const { data: businesses } = useQuery({
+  if (loading) return;
+
+  if (!user) {
+    console.log("NO USER -> LOGIN");
+    navigate({ to: "/business/login" });
+  }
+}, [loading, user, roles, navigate]);
+
+useEffect(() => {
+  if (!loading && !user) {
+    navigate({ to: "/business/login" });
+  }
+}, [loading, user, navigate]);
+
+  const { data: businesses, error: businessesError } = useQuery({
     queryKey: ["my-businesses", user?.id],
     enabled: !!user,
     queryFn: async () => {
@@ -42,7 +58,13 @@ function Dashboard() {
         .select("*")
         .eq("owner_id", user!.id)
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+  console.error("BUSINESSES ERROR:", error);
+  throw error;
+}
+
+console.log("MY BUSINESSES:", data);
+return data;
       return data;
     },
   });
@@ -56,7 +78,7 @@ function Dashboard() {
 
   if (!user) return null;
   const selected = businesses?.find((b) => b.id === selectedId) ?? null;
-  const isBusiness = roles.includes("business");
+  const isBusiness = roles.includes("business") || (businesses?.length ?? 0) > 0;
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
@@ -64,7 +86,9 @@ function Dashboard() {
         <div>
           <p className="text-gold text-xs uppercase tracking-[0.3em]">Business portal</p>
           <h1 className="font-display text-3xl mt-1">Welcome, {user.user_metadata?.full_name ?? user.email}</h1>
-          <p className="text-sm text-muted-foreground">{isBusiness ? "Business owner" : "Tourist account"} · {user.email}</p>
+          <p className="text-sm text-muted-foreground">
+  Business owner · {user.email}
+</p>
         </div>
         <button onClick={() => signOut().then(() => navigate({ to: "/" }))} className="inline-flex items-center gap-2 rounded-full border border-border/60 px-4 py-2 text-sm hover:border-gold/40">
           <LogOut className="h-4 w-4" /> Sign out

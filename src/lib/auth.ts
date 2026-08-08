@@ -22,40 +22,66 @@ export function useAuth(): AuthState {
   useEffect(() => {
     let mounted = true;
 
-    const loadRoles = async (userId: string) => {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+    const loadRoles = async (userId: string): Promise<AppRole[]> => {
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+
+      if (error) {
+        console.error("Failed to load roles:", error);
+        return [];
+      }
+
       return (data ?? []).map((r) => r.role as AppRole);
     };
 
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_evt, session) => {
+    const setAuthState = async (session: Session | null) => {
       if (!mounted) return;
+
       if (!session?.user) {
-        setState({ session: null, user: null, roles: [], loading: false });
+        setState({
+          session: null,
+          user: null,
+          roles: [],
+          loading: false,
+        });
         return;
       }
-      setState((s) => ({ ...s, session, user: session.user, loading: true }));
-      setTimeout(async () => {
-        const roles = await loadRoles(session.user.id);
-        if (!mounted) return;
-        setState({ session, user: session.user, roles, loading: false });
+
+      const roles = await loadRoles(session.user.id);
+
+      if (!mounted) return;
+
+      setState({
+        session,
+        user: session.user,
+        roles,
+        loading: false,
+      });
+    };
+
+    const initialize = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      await setAuthState(session);
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setTimeout(() => {
+        setAuthState(session);
       }, 0);
     });
 
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!mounted) return;
-      if (!data.session?.user) {
-        setState({ session: null, user: null, roles: [], loading: false });
-        return;
-      }
-      const roles = await loadRoles(data.session.user.id);
-      if (!mounted) return;
-      setState({ session: data.session, user: data.session.user, roles, loading: false });
-    })();
+    initialize();
 
     return () => {
       mounted = false;
-      sub.subscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 

@@ -19,18 +19,27 @@ function LoginPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && user && roles.includes("business")) {
-      navigate({ to: "/business/dashboard" });
-    }
-  }, [loading, user, roles, navigate]);
+  if (!loading && user) {
+    navigate({ to: "/business/dashboard" });
+  }
+}, [loading, user, navigate]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true); setErr(null);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setBusy(false);
-    if (error) setErr(error.message);
-  };
+    const { error } = await supabase.auth.signInWithPassword({
+  email: email.trim(),
+  password,
+});
+
+if (error) {
+  setBusy(false);
+  setErr(error.message);
+  return;
+}
+
+setBusy(false);
+ };
 
   return (
     <div className="mx-auto max-w-md px-6 py-20">

@@ -61,7 +61,7 @@ function AuthPage() {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "https://luxor-ai-new.vercel.app",
+      redirectTo: `${window.location.origin}/auth`,
     },
   });
 

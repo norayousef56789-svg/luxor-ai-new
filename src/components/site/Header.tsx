@@ -21,7 +21,7 @@ const tourist = [
 ] as const;
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-midnight/70">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4">
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-gold text-primary-foreground font-display text-lg font-bold shadow-gold">L</span>
           <span className="font-display text-xl tracking-wider">
@@ -30,7 +30,7 @@ const tourist = [
           </span>
         </Link>
 
-        <nav className="hidden xl:flex items-center gap-5 text-sm">
+        <nav className="hidden xl:flex flex-1 items-center justify-center gap-3 text-sm">
           {tourist.map((item) => (
             <Link
               key={item.to}
@@ -48,18 +48,17 @@ const tourist = [
           )}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-2">
   <Globe className="h-4 w-4 shrink-0 text-gold" />
-
-  <select
-    value={i18n.language?.split("-")[0] || "en"}
-    onChange={(e) => i18n.changeLanguage(e.target.value)}
-    className="shrink-0 rounded-md border border-gold/40 bg-midnight px-2 py-1 text-sm text-foreground"
-  >
-    <option value="en">English</option>
-    <option value="ar">العربية</option>
-    <option value="zh">中文</option>
-  </select>
+<select
+  value={i18n.language}
+  onChange={(e) => i18n.changeLanguage(e.target.value)}
+  className="w-24 rounded-md border border-gold/40 bg-transparent px-2 py-1 text-sm text-foreground"
+>
+  <option value="en">English</option>
+  <option value="ar">العربية</option>
+  <option value="zh">中文</option>
+</select>
           {user ? (
             <div className="hidden md:flex items-center gap-2">
               {isBusiness && (
