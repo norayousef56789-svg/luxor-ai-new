@@ -245,13 +245,14 @@ function ProfileTab({ business }: { business: Business }) {
     address: business.address,
     description: business.description ?? "",
     image_url: business.image_url ?? "",
+    video_url: business.video_url ?? "",
   });
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     setForm({
       name: business.name, phone: business.phone, email: business.email,
-      address: business.address, description: business.description ?? "", image_url: business.image_url ?? "",
+      address: business.address, description: business.description ?? "", image_url: business.image_url ?? "", video_url: business.video_url ?? "",
     });
   }, [business]);
 

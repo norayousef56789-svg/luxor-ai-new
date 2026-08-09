@@ -105,6 +105,7 @@ export type Database = {
           email: string
           id: string
           image_url: string | null
+          video_url: string | null
           name: string
           owner_id: string | null
           phone: string
@@ -119,6 +120,7 @@ export type Database = {
           email: string
           id?: string
           image_url?: string | null
+          video_url?: string | null
           name: string
           owner_id?: string | null
           phone: string
@@ -133,6 +135,7 @@ export type Database = {
           email?: string
           id?: string
           image_url?: string | null
+          video_url?: string | null
           name?: string
           owner_id?: string | null
           phone?: string
