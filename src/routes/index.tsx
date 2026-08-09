@@ -36,14 +36,16 @@ function Home() {
         <div className="absolute inset-0 hero-overlay" />
         <div className="relative mx-auto max-w-7xl px-6 py-32 md:py-44">
           <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-midnight/40 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-gold">
-            <Sparkles className="h-3.5 w-3.5" /> Smart tourism + AI marketing · Luxor, Egypt
+            <Sparkles className="h-3.5 w-3.5" /> {t("heroBadge")}
           </span>
           <h1 className="mt-6 font-display text-5xl md:text-7xl leading-[1.05] max-w-3xl">
-            Walk among <span className="text-gradient-gold">pharaohs</span>.<br /> Plan it like a local.
-          </h1>
+  {t("heroTitleBefore")}{" "}
+  <span className="text-gradient-gold">{t("heroTitleHighlight")}</span>.
+  <br /> {t("heroTitleAfter")}
+</h1>
           <p className="mt-6 max-w-xl text-lg text-foreground/80">
-            Luxor AI curates the world's greatest open-air museum — temples, tombs, river sunsets and the perfect tagine — and gives local businesses an AI marketing studio of their own.
-          </p>
+  {t("heroDescription")}
+</p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link to="/attractions" className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-sm font-medium text-primary-foreground shadow-gold">
               {t("exploreAttractions")} <ArrowRight className="h-4 w-4" />
@@ -62,11 +64,31 @@ function Home() {
       <section className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-4 md:grid-cols-4">
           {[
-            { to: "/attractions", icon: Compass, title: "Attractions", desc: "Temples, tombs & timeless rituals." },
-            { to: "/events", icon: CalendarDays, title: "Events", desc: "Opera at Hatshepsut, balloon festivals." },
-            { to: "/bazaars", icon: Tag, title: "Bazaars", desc: "Alabaster, papyrus, fair-trade crafts." },
-            { to: "/businesses", icon: Store, title: "Directory", desc: "Verified hotels, restaurants & tours." },
-          ].map((q) => (
+  {
+    to: "/attractions",
+    icon: Compass,
+    title: t("quickNavAttractions"),
+    desc: t("quickNavAttractionsDesc"),
+  },
+  {
+    to: "/events",
+    icon: CalendarDays,
+    title: t("quickNavEvents"),
+    desc: t("quickNavEventsDesc"),
+  },
+  {
+    to: "/bazaars",
+    icon: Tag,
+    title: t("quickNavBazaars"),
+    desc: t("quickNavBazaarsDesc"),
+  },
+  {
+    to: "/businesses",
+    icon: Store,
+    title: t("quickNavDirectory"),
+    desc: t("quickNavDirectoryDesc"),
+  },
+].map((q) => (
             <Link key={q.to} to={q.to} className="rounded-2xl border border-border/60 bg-card/50 p-6 hover:border-gold/40 transition">
               <q.icon className="h-5 w-5 text-gold" />
               <h3 className="mt-3 font-display text-xl">{q.title}</h3>

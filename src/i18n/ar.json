@@ -60,5 +60,13 @@
   "orientYourself": "حدد موقعك",
   "mapTitle": "الضفة الشرقية، الضفة الغربية، والنيل بينهما",
   "mapDescription": "تعيش الأقصر على ضفتي النيل — المعابد الحية في الشرق، والمقابر الأبدية في الغرب. خريطتنا التفاعلية تعرض جميع المواقع.",
-  "openInteractiveMap": "افتح الخريطة التفاعلية"
+  "openInteractiveMap": "افتح الخريطة التفاعلية",
+  "quickNavAttractions": "المعالم السياحية",
+"quickNavAttractionsDesc": "المعابد والمقابر وطقوس خالدة.",
+"quickNavEvents": "الفعاليات",
+"quickNavEventsDesc": "أوبرا حتشبسوت ومهرجانات المناطيد.",
+"quickNavBazaars": "البازارات",
+"quickNavBazaarsDesc": "الألباستر والبردي والحرف اليدوية.",
+"quickNavDirectory": "الدليل",
+"quickNavDirectoryDesc": "فنادق ومطاعم ورحلات موثقة."
 }

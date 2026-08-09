@@ -54,5 +54,14 @@
   "orientYourself": "Orient yourself",
   "mapTitle": "East Bank, West Bank, and the river between",
   "mapDescription": "Luxor lives on two sides of the Nile — the living temples on the east, the eternal tombs on the west. Our interactive map plots every site.",
-  "openInteractiveMap": "Open interactive map"
+  "openInteractiveMap": "Open interactive map",
+  "quickNavAttractions": "Attractions",
+"quickNavAttractionsDesc": "Temples, tombs & timeless rituals.",
+"quickNavEvents": "Events",
+"quickNavEventsDesc": "Opera at Hatshepsut, balloon festivals.",
+"quickNavBazaars": "Bazaars",
+"quickNavBazaarsDesc": "Alabaster, papyrus, fair-trade crafts.",
+"quickNavDirectory": "Directory",
+"quickNavDirectoryDesc": "Verified hotels, restaurants & tours."
+  
 }
