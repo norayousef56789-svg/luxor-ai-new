@@ -21,6 +21,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import "@/i18n/i18n";
+import { supabase } from "@/integrations/supabase/client";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -103,23 +104,52 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { i18n } = useTranslation();
 
+  // اللغة واتجاه الموقع
   useEffect(() => {
     const language = i18n.language;
 
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   }, [i18n.language]);
+
+  // تسجيل زيارة المستخدم
+  useEffect(() => {
+    const recordVisit = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user || !user.email) return;
+
+        const visitsTable = (supabase as any).from("visits");
+
+        await visitsTable.insert({
+          user_id: user.id,
+          email: user.email,
+        });
+      } catch (error) {
+        console.error("Failed to record visit:", error);
+      }
+    };
+
+    recordVisit();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen flex flex-col bg-gradient-night">
         <Header />
+
         <main className="flex-1">
           <Outlet />
         </main>
+
         <Footer />
       </div>
     </QueryClientProvider>
