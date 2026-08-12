@@ -61,12 +61,33 @@
   "mapTitle": "东岸、西岸，以及中间的尼罗河",
   "mapDescription": "卢克索坐落在尼罗河两岸——东岸是充满生命力的神庙，西岸是永恒的陵墓。我们的互动地图展示所有景点。",
   "openInteractiveMap": "打开互动地图",
+
   "quickNavAttractions": "景点",
-"quickNavAttractionsDesc": "寺庙、陵墓与永恒的古老仪式。",
-"quickNavEvents": "活动",
-"quickNavEventsDesc": "哈特谢普苏特歌剧与热气球节。",
-"quickNavBazaars": "集市",
-"quickNavBazaarsDesc": "雪花石膏、纸莎草纸与公平贸易手工艺品。",
-"quickNavDirectory": "旅游指南",
-"quickNavDirectoryDesc": "经过认证的酒店、餐厅和旅游服务。"
+  "quickNavAttractionsDesc": "寺庙、陵墓与永恒的古老仪式。",
+  "quickNavEvents": "活动",
+  "quickNavEventsDesc": "哈特谢普苏特歌剧与热气球节。",
+  "quickNavBazaars": "集市",
+  "quickNavBazaarsDesc": "雪花石膏、纸莎草纸与公平贸易手工艺品。",
+  "quickNavDirectory": "旅游指南",
+  "quickNavDirectoryDesc": "经过认证的酒店、餐厅和旅游服务。",
+
+  "whereToEat": "餐饮指南",
+  "restaurantsTitle": "卢克索餐厅",
+  "restaurantsSubtitle": "美味的塔吉锅、烛光露台、高级餐厅以及日落时分的甜美卡卡迪。",
+  "loading": "正在加载…",
+  "noListings": "目前还没有商家信息。",
+  "beFirstToList": "成为第一个添加企业的人",
+  "address": "地址",
+  "phone": "电话",
+  "offer": "优惠",
+  "businessTypeRestaurant": "餐厅",
+  "businessTypeHotel": "酒店",
+  "businessTypeBazaar": "集市",
+  "businessTypeTour": "旅游公司",
+
+  "mustVisitSection": "必游之地",
+  "iconicLuxorSection": "卢克索经典景点",
+
+  "returnHome": "返回首页",
+  "viewDetails": "查看详情"
 }

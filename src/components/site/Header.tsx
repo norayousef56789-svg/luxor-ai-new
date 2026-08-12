@@ -1,5 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Shield, LogOut, User, Menu, Globe } from "lucide-react";
+import {
+  Sparkles,
+  Shield,
+  LogOut,
+  User,
+  Menu,
+  Globe,
+} from "lucide-react";
 import { useState } from "react";
 import { useAuth, signOut } from "@/lib/auth";
 import { useTranslation } from "react-i18next";
@@ -23,6 +30,19 @@ export function Header() {
     { to: "/businesses", label: t("businesses") },
     { to: "/map", label: t("map") },
   ] as const;
+
+  const handleLanguageChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const language = event.target.value;
+
+    await i18n.changeLanguage(language);
+
+    localStorage.setItem("luxor-language", language);
+
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-midnight/70">
@@ -74,8 +94,8 @@ export function Header() {
           <Globe className="h-4 w-4 shrink-0 text-gold" />
 
           <select
-            value={i18n.language}
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
+            value={i18n.resolvedLanguage || i18n.language}
+            onChange={handleLanguageChange}
             className="w-24 rounded-md border border-gold/40 bg-transparent px-2 py-1 text-sm text-foreground"
           >
             <option value="en">English</option>
@@ -87,17 +107,15 @@ export function Header() {
           {user ? (
             <div className="hidden md:flex items-center gap-2">
 
-              {/* Business Dashboard */}
               {isBusiness && (
                 <Link
                   to="/business/dashboard"
                   className="rounded-full border border-gold/40 px-3 py-1.5 text-xs text-gold hover:bg-gold/10"
                 >
-                  Dashboard
+                  {t("businessDashboard")}
                 </Link>
               )}
 
-              {/* Sign Out */}
               <button
                 onClick={() => signOut()}
                 className="inline-flex items-center gap-1.5 text-xs text-foreground/70 hover:text-gold"
@@ -107,7 +125,6 @@ export function Header() {
               </button>
             </div>
           ) : (
-            /* Sign In */
             <Link
               to="/auth"
               search={{
@@ -142,7 +159,6 @@ export function Header() {
       {/* Mobile Navigation */}
       {open && (
         <div className="xl:hidden border-t border-border/60 bg-midnight/95 px-6 py-4">
-
           <div className="grid grid-cols-2 gap-2 text-sm">
 
             {tourist.map((item) => (
@@ -156,7 +172,6 @@ export function Header() {
               </Link>
             ))}
 
-            {/* Ask Luxor AI */}
             <Link
               to="/ask-luxor"
               onClick={() => setOpen(false)}
@@ -165,7 +180,6 @@ export function Header() {
               {t("askLuxorAI")}
             </Link>
 
-            {/* Business Dashboard */}
             {isBusiness && (
               <Link
                 to="/business/dashboard"
@@ -176,19 +190,19 @@ export function Header() {
               </Link>
             )}
 
-            {/* Mobile Sign In */}
-            <Link
-              to="/auth"
-              search={{
-                redirect: undefined,
-              }}
-              onClick={() => setOpen(false)}
-              className="text-gold py-1.5"
-            >
-              {t("signIn")}
-            </Link>
+            {!user && (
+              <Link
+                to="/auth"
+                search={{
+                  redirect: undefined,
+                }}
+                onClick={() => setOpen(false)}
+                className="text-gold py-1.5"
+              >
+                {t("signIn")}
+              </Link>
+            )}
 
-            {/* Mobile Sign Out */}
             {user && (
               <button
                 onClick={() => {

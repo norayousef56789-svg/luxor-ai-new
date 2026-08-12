@@ -5,8 +5,8 @@ import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 
-import { useTranslation } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import {
   Outlet,
   Link,
@@ -15,28 +15,40 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+
 import { useEffect, type ReactNode } from "react";
 
+import { useTranslation } from "react-i18next";
+import { I18nextProvider } from "react-i18next";
+
 import appCss from "../styles.css?url";
+
 import { reportLovableError } from "../lib/lovable-error-reporting";
+
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+
 import i18n from "@/i18n/i18n";
-import { I18nextProvider } from "react-i18next";
+
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
+  const { t } = useTranslation();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-7xl text-gradient-gold">404</h1>
+
+        <h1 className="font-display text-7xl text-gradient-gold">
+          404
+        </h1>
 
         <h2 className="mt-4 text-xl font-semibold text-foreground">
-          Lost in the desert
+          {t("lostTitle")}
         </h2>
 
         <p className="mt-2 text-sm text-muted-foreground">
-          That page wandered off the map. Let's get you back to Luxor.
+          {t("lostDescription")}
         </p>
 
         <div className="mt-6">
@@ -44,9 +56,10 @@ function NotFoundComponent() {
             to="/"
             className="inline-flex items-center justify-center rounded-full bg-gradient-gold px-5 py-2 text-sm font-medium text-primary-foreground"
           >
-            Return home
+            {t("returnHome")}
           </Link>
         </div>
+
       </div>
     </div>
   );
@@ -62,6 +75,7 @@ function ErrorComponent({
   console.error(error);
 
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     reportLovableError(error, {
@@ -72,12 +86,13 @@ function ErrorComponent({
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
+
         <h1 className="font-display text-2xl text-gold">
-          Something fell off the obelisk
+          {t("errorTitle")}
         </h1>
 
         <p className="mt-2 text-sm text-muted-foreground">
-          Try again — the gods of Karnak are forgiving.
+          {t("errorDescription")}
         </p>
 
         <button
@@ -87,8 +102,9 @@ function ErrorComponent({
           }}
           className="mt-6 inline-flex items-center justify-center rounded-full bg-gradient-gold px-5 py-2 text-sm font-medium text-primary-foreground"
         >
-          Try again
+          {t("tryAgain")}
         </button>
+
       </div>
     </div>
   );
@@ -99,7 +115,9 @@ export const Route = createRootRouteWithContext<{
 }>()({
   head: () => ({
     meta: [
-      { charSet: "utf-8" },
+      {
+        charSet: "utf-8",
+      },
 
       {
         name: "viewport",
@@ -118,46 +136,18 @@ export const Route = createRootRouteWithContext<{
 
       {
         property: "og:title",
-        content: "Luxor AI — Discover Luxor with intelligent travel",
+        content: "Luxor AI — Discover Luxor",
       },
 
       {
         property: "og:description",
         content:
-          "Luxor AI is the smart companion for Luxor, Egypt — attractions, hotels, restaurants, itineraries and an AI guide that knows the ancient city.",
+          "Smart tourism + AI marketing platform for Luxor, Egypt.",
       },
 
       {
         property: "og:type",
         content: "website",
-      },
-
-      {
-        name: "twitter:card",
-        content: "summary_large_image",
-      },
-
-      {
-        name: "twitter:title",
-        content: "Luxor AI — Discover Luxor with intelligent travel",
-      },
-
-      {
-        name: "twitter:description",
-        content:
-          "Luxor AI is the smart companion for Luxor, Egypt — attractions, hotels, restaurants, itineraries and an AI guide that knows the ancient city.",
-      },
-
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/87f98744-6e22-4390-8b90-01503d1f06f9",
-      },
-
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/87f98744-6e22-4390-8b90-01503d1f06f9",
       },
     ],
 
@@ -170,12 +160,19 @@ export const Route = createRootRouteWithContext<{
   }),
 
   shellComponent: RootShell,
+
   component: RootComponent,
+
   notFoundComponent: NotFoundComponent,
+
   errorComponent: ErrorComponent,
 });
 
-function RootShell({ children }: { children: ReactNode }) {
+function RootShell({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <html lang="en" dir="ltr">
       <head>
@@ -193,9 +190,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
   const { i18n: translationI18n } = useTranslation();
 
-  // اللغة واتجاه الموقع
+  /*
+   * تغيير لغة واتجاه الموقع بالكامل
+   */
   useEffect(() => {
     const language = translationI18n.language;
 
@@ -203,9 +203,14 @@ function RootComponent() {
 
     document.documentElement.dir =
       language === "ar" ? "rtl" : "ltr";
+
+    document.body.dir =
+      language === "ar" ? "rtl" : "ltr";
   }, [translationI18n.language]);
 
-  // تسجيل زيارة المستخدم
+  /*
+   * تسجيل زيارة المستخدم
+   */
   useEffect(() => {
     const recordVisit = async () => {
       try {
@@ -224,7 +229,10 @@ function RootComponent() {
           email: user.email,
         });
       } catch (error) {
-        console.error("Failed to record visit:", error);
+        console.error(
+          "Failed to record visit:",
+          error
+        );
       }
     };
 
@@ -234,7 +242,9 @@ function RootComponent() {
   return (
     <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={queryClient}>
+
         <div className="min-h-screen flex flex-col bg-gradient-night">
+
           <Header />
 
           <main className="flex-1">
@@ -242,7 +252,9 @@ function RootComponent() {
           </main>
 
           <Footer />
+
         </div>
+
       </QueryClientProvider>
     </I18nextProvider>
   );
