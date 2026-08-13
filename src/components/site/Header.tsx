@@ -7,18 +7,31 @@ import {
   Menu,
   Globe,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth, signOut } from "@/lib/auth";
 import { useTranslation } from "react-i18next";
 
 export function Header() {
   const { user, roles } = useAuth();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const isAdmin = roles.includes("admin");
   const isBusiness = roles.includes("business");
 
   const { t, i18n } = useTranslation();
+
+  // Wait until the browser is mounted before using
+  // the saved language from localStorage.
+  useEffect(() => {
+    setMounted(true);
+
+    const savedLanguage = localStorage.getItem("luxor-language");
+
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, [i18n]);
 
   const tourist = [
     { to: "/attractions", label: t("attractions") },
@@ -43,6 +56,35 @@ export function Header() {
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   };
+
+  // Prevent SSR/client hydration mismatch.
+  if (!mounted) {
+    return (
+      <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-midnight/70">
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-gold text-primary-foreground font-display text-lg font-bold shadow-gold">
+              L
+            </span>
+
+            <span className="font-display text-xl tracking-wider">
+              <span className="text-gradient-gold">LUXOR</span>
+              <span className="ml-1 text-foreground/80 text-sm align-middle">
+                AI
+              </span>
+            </span>
+          </Link>
+
+          <div className="flex-1" />
+
+          <Globe className="h-4 w-4 shrink-0 text-gold" />
+
+          <div className="w-24 h-8 rounded-md border border-gold/40" />
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-midnight/70">
