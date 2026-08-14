@@ -7,7 +7,7 @@ import {
   Menu,
   Globe,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { useAuth, signOut } from "@/lib/auth";
 import { useTranslation } from "react-i18next";
 
@@ -21,31 +21,54 @@ export function Header() {
 
   const { t, i18n } = useTranslation();
 
-  // Wait until the browser is mounted before using
-  // the saved language from localStorage.
+  // Load saved language after the browser is mounted
   useEffect(() => {
     setMounted(true);
 
     const savedLanguage = localStorage.getItem("luxor-language");
 
-    if (savedLanguage) {
+    if (savedLanguage && ["en", "ar", "zh"].includes(savedLanguage)) {
       i18n.changeLanguage(savedLanguage);
     }
   }, [i18n]);
 
   const tourist = [
-    { to: "/attractions", label: t("attractions") },
-    { to: "/itineraries", label: t("itineraries") },
-    { to: "/hotels", label: t("hotels") },
-    { to: "/restaurants", label: t("restaurants") },
-    { to: "/bazaars", label: t("bazaars") },
-    { to: "/events", label: t("events") },
-    { to: "/businesses", label: t("businesses") },
-    { to: "/map", label: t("map") },
+    {
+      to: "/attractions",
+      label: t("nav.attractions"),
+    },
+    {
+      to: "/itineraries",
+      label: t("nav.itineraries"),
+    },
+    {
+      to: "/hotels",
+      label: t("nav.hotels"),
+    },
+    {
+      to: "/restaurants",
+      label: t("nav.restaurants"),
+    },
+    {
+      to: "/bazaars",
+      label: t("nav.bazaars"),
+    },
+    {
+      to: "/events",
+      label: t("nav.events"),
+    },
+    {
+      to: "/businesses",
+      label: t("nav.businesses"),
+    },
+    {
+      to: "/map",
+      label: t("nav.map"),
+    },
   ] as const;
 
   const handleLanguageChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: ChangeEvent<HTMLSelectElement>,
   ) => {
     const language = event.target.value;
 
@@ -57,7 +80,7 @@ export function Header() {
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
   };
 
-  // Prevent SSR/client hydration mismatch.
+  // Prevent SSR/client hydration mismatch
   if (!mounted) {
     return (
       <header className="sticky top-0 z-40 border-b border-border/60 backdrop-blur-xl bg-midnight/70">
@@ -70,6 +93,7 @@ export function Header() {
 
             <span className="font-display text-xl tracking-wider">
               <span className="text-gradient-gold">LUXOR</span>
+
               <span className="ml-1 text-foreground/80 text-sm align-middle">
                 AI
               </span>
@@ -98,6 +122,7 @@ export function Header() {
 
           <span className="font-display text-xl tracking-wider">
             <span className="text-gradient-gold">LUXOR</span>
+
             <span className="ml-1 text-foreground/80 text-sm align-middle">
               AI
             </span>
@@ -111,20 +136,25 @@ export function Header() {
               key={item.to}
               to={item.to}
               className="text-foreground/75 hover:text-gold transition-colors"
-              activeProps={{ className: "text-gold" }}
+              activeProps={{
+                className: "text-gold",
+              }}
             >
               {item.label}
             </Link>
           ))}
 
+          {/* Admin */}
           {isAdmin && (
             <Link
               to="/admin"
-              className="text-foreground/75 hover:text-gold inline-flex items-center gap-1"
-              activeProps={{ className: "text-gold" }}
+              className="text-foreground/75 hover:text-gold inline-flex items-center gap-1 transition-colors"
+              activeProps={{
+                className: "text-gold",
+              }}
             >
               <Shield className="h-3.5 w-3.5" />
-              {t("admin")}
+              {t("nav.admin")}
             </Link>
           )}
         </nav>
@@ -138,7 +168,8 @@ export function Header() {
           <select
             value={i18n.resolvedLanguage || i18n.language}
             onChange={handleLanguageChange}
-            className="w-24 rounded-md border border-gold/40 bg-transparent px-2 py-1 text-sm text-foreground"
+            aria-label={t("lang.label")}
+            className="w-24 rounded-md border border-gold/40 bg-midnight/80 px-2 py-1 text-sm text-foreground outline-none"
           >
             <option value="en">English</option>
             <option value="ar">العربية</option>
@@ -149,24 +180,28 @@ export function Header() {
           {user ? (
             <div className="hidden md:flex items-center gap-2">
 
+              {/* Business Dashboard */}
               {isBusiness && (
                 <Link
                   to="/business/dashboard"
-                  className="rounded-full border border-gold/40 px-3 py-1.5 text-xs text-gold hover:bg-gold/10"
+                  className="rounded-full border border-gold/40 px-3 py-1.5 text-xs text-gold hover:bg-gold/10 transition-colors"
                 >
-                  {t("businessDashboard")}
+                  {t("nav.businessDashboard")}
                 </Link>
               )}
 
+              {/* Sign Out */}
               <button
+                type="button"
                 onClick={() => signOut()}
-                className="inline-flex items-center gap-1.5 text-xs text-foreground/70 hover:text-gold"
+                className="inline-flex items-center gap-1.5 text-xs text-foreground/70 hover:text-gold transition-colors"
               >
                 <LogOut className="h-3.5 w-3.5" />
-                {t("signOut")}
+                {t("nav.signOut")}
               </button>
             </div>
           ) : (
+            /* Sign In */
             <Link
               to="/auth"
               search={{
@@ -175,7 +210,7 @@ export function Header() {
               className="hidden md:inline-flex items-center gap-2 text-foreground/80 hover:text-gold transition-colors"
             >
               <User className="h-3.5 w-3.5" />
-              {t("signIn")}
+              {t("nav.signIn")}
             </Link>
           )}
 
@@ -185,13 +220,15 @@ export function Header() {
             className="hidden sm:inline-flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 text-sm font-medium text-primary-foreground shadow-gold"
           >
             <Sparkles className="h-4 w-4" />
-            {t("askLuxorAI")}
+            {t("nav.askAi")}
           </Link>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Button */}
           <button
-            onClick={() => setOpen((v) => !v)}
-            className="xl:hidden p-2 text-foreground/70 hover:text-gold"
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-label="Open menu"
+            className="xl:hidden p-2 text-foreground/70 hover:text-gold transition-colors"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -203,35 +240,50 @@ export function Header() {
         <div className="xl:hidden border-t border-border/60 bg-midnight/95 px-6 py-4">
           <div className="grid grid-cols-2 gap-2 text-sm">
 
+            {/* Tourist Links */}
             {tourist.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className="text-foreground/75 hover:text-gold py-1.5"
+                className="text-foreground/75 hover:text-gold py-1.5 transition-colors"
               >
                 {item.label}
               </Link>
             ))}
 
+            {/* Ask AI */}
             <Link
               to="/ask-luxor"
               onClick={() => setOpen(false)}
               className="text-gold py-1.5"
             >
-              {t("askLuxorAI")}
+              {t("nav.askAi")}
             </Link>
 
+            {/* Admin */}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                onClick={() => setOpen(false)}
+                className="text-gold py-1.5"
+              >
+                {t("nav.admin")}
+              </Link>
+            )}
+
+            {/* Business Dashboard */}
             {isBusiness && (
               <Link
                 to="/business/dashboard"
                 onClick={() => setOpen(false)}
                 className="text-gold py-1.5"
               >
-                {t("businessDashboard")}
+                {t("nav.businessDashboard")}
               </Link>
             )}
 
+            {/* Sign In */}
             {!user && (
               <Link
                 to="/auth"
@@ -241,19 +293,21 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="text-gold py-1.5"
               >
-                {t("signIn")}
+                {t("nav.signIn")}
               </Link>
             )}
 
+            {/* Sign Out */}
             {user && (
               <button
+                type="button"
                 onClick={() => {
                   setOpen(false);
                   signOut();
                 }}
                 className="text-left text-foreground/70 py-1.5"
               >
-                {t("signOut")}
+                {t("nav.signOut")}
               </button>
             )}
           </div>

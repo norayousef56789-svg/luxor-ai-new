@@ -3,6 +3,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { Camera, Send, Sparkles, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/ask-luxor")({
   head: () => ({
@@ -20,17 +21,13 @@ export const Route = createFileRoute("/ask-luxor")({
       },
     ],
   }),
+
   component: AskLuxorPage,
 });
 
-const SUGGESTIONS = [
-  "Plan a romantic 3-day trip to Luxor",
-  "Which tombs should I visit in the Valley of the Kings?",
-  "Best sunset spot on the Nile?",
-  "How do I book a hot-air balloon ride?",
-];
-
 function AskLuxorPage() {
+  const { t } = useTranslation();
+
   const transport = useRef(
     new DefaultChatTransport({ api: "/api/chat" }),
   );
@@ -48,6 +45,13 @@ function AskLuxorPage() {
 
   const isLoading =
     status === "submitted" || status === "streaming";
+
+  const suggestions = [
+    t("ask.suggestion1"),
+    t("ask.suggestion2"),
+    t("ask.suggestion3"),
+    t("ask.suggestion4"),
+  ];
 
   const fileToDataUrl = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -94,7 +98,7 @@ function AskLuxorPage() {
       await sendMessage({
         text:
           value ||
-          "What is this place? Tell me about this tourist attraction.",
+          t("ask.imageDefaultQuestion"),
         files: [
           {
             type: "file",
@@ -128,19 +132,22 @@ function AskLuxorPage() {
   };
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-180px)] min-h-[600px] max-w-3xl flex-col px-4 py-10 md:py-14">
+    <div
+      dir="auto"
+      className="mx-auto flex h-[calc(100vh-180px)] min-h-[600px] max-w-3xl flex-col px-4 py-10 md:py-14"
+    >
       <div className="mb-6 text-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-midnight/50 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-gold">
           <Sparkles className="h-3.5 w-3.5" />
-          Luxor AI
+          {t("ask.badge")}
         </div>
 
         <h1 className="mt-4 font-display text-3xl md:text-4xl">
-          Ask anything about Luxor
+          {t("ask.heading")}
         </h1>
 
         <p className="mt-2 text-sm text-muted-foreground">
-          Temples, tombs, tickets, tables for two.
+          {t("ask.subheading")}
         </p>
       </div>
 
@@ -155,16 +162,16 @@ function AskLuxorPage() {
             </div>
 
             <p className="max-w-md text-muted-foreground">
-              I'm your Egyptologist-in-residence. Try one of these to get
-              started:
+              {t("ask.introText")}
             </p>
 
             <div className="grid w-full max-w-xl gap-3 sm:grid-cols-2">
-              {SUGGESTIONS.map((suggestion) => (
+              {suggestions.map((suggestion) => (
                 <button
                   key={suggestion}
                   onClick={() => submit(suggestion)}
-                  className="rounded-xl border border-border/60 bg-card p-4 text-left text-sm transition hover:border-gold/50 hover:bg-card/80"
+                  disabled={isLoading}
+                  className="rounded-xl border border-border/60 bg-card p-4 text-left text-sm transition hover:border-gold/50 hover:bg-card/80 disabled:opacity-50"
                 >
                   {suggestion}
                 </button>
@@ -180,7 +187,7 @@ function AskLuxorPage() {
         {isLoading &&
           messages[messages.length - 1]?.role === "user" && (
             <div className="text-sm italic text-gold/80">
-              Luxor is thinking…
+              {t("ask.thinking")}
             </div>
           )}
       </div>
@@ -189,6 +196,7 @@ function AskLuxorPage() {
         <div className="mt-3 flex items-center justify-between rounded-xl border border-gold/40 bg-card px-3 py-2 text-sm">
           <div className="flex items-center gap-2">
             <Camera className="h-4 w-4 text-gold" />
+
             <span className="max-w-[250px] truncate">
               {selectedImage.name}
             </span>
@@ -204,7 +212,8 @@ function AskLuxorPage() {
               }
             }}
             className="rounded-lg p-1 hover:bg-muted"
-            aria-label="Remove image"
+            aria-label={t("ask.removeImage")}
+            title={t("ask.removeImage")}
           >
             <X className="h-4 w-4" />
           </button>
@@ -232,8 +241,8 @@ function AskLuxorPage() {
           onClick={() => fileInputRef.current?.click()}
           disabled={isLoading}
           className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/60 transition hover:border-gold/60 disabled:opacity-40"
-          aria-label="Take a photo"
-          title="Take a photo"
+          aria-label={t("ask.takePhoto")}
+          title={t("ask.takePhoto")}
         >
           <Camera className="h-4 w-4" />
         </button>
@@ -249,7 +258,7 @@ function AskLuxorPage() {
               submit(input);
             }
           }}
-          placeholder="Ask about Karnak, plan a 4-day trip, find a sunset rooftop…"
+          placeholder={t("ask.inputPlaceholder")}
           className="max-h-40 flex-1 resize-none bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none"
         />
 
@@ -259,7 +268,8 @@ function AskLuxorPage() {
             isLoading || (!input.trim() && !selectedImage)
           }
           className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-gold text-primary-foreground shadow-gold disabled:opacity-40 disabled:shadow-none"
-          aria-label="Send"
+          aria-label={t("ask.sendAria")}
+          title={t("ask.sendAria")}
         >
           <Send className="h-4 w-4" />
         </button>
@@ -272,7 +282,13 @@ function Message({ message }: { message: UIMessage }) {
   const isUser = message.role === "user";
 
   return (
-    <div className={isUser ? "flex justify-end" : "flex justify-start"}>
+    <div
+      className={
+        isUser
+          ? "flex justify-end"
+          : "flex justify-start"
+      }
+    >
       <div
         className={
           isUser
@@ -284,7 +300,10 @@ function Message({ message }: { message: UIMessage }) {
           {message.parts.map((part, index) => {
             if (part.type === "text") {
               return (
-                <div key={index} className="whitespace-pre-wrap">
+                <div
+                  key={index}
+                  className="whitespace-pre-wrap"
+                >
                   {part.text}
                 </div>
               );

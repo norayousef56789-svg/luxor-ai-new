@@ -1,0 +1,105 @@
+export const common: Record<string, string> = {
+  // Brand
+  "brand.name": "LUXOR",
+  "brand.suffix": "AI",
+  "brand.tagline": "The intelligent companion for the world's greatest open-air museum.",
+
+  // Language switcher
+  "lang.label": "Language",
+  "lang.en": "English",
+  "lang.ar": "العربية",
+  "lang.zh": "中文",
+
+  // Navigation
+  "nav.attractions": "Attractions",
+  "nav.itineraries": "Itineraries",
+  "nav.hotels": "Hotels",
+  "nav.restaurants": "Restaurants",
+  "nav.bazaars": "Bazaars",
+  "nav.events": "Events",
+  "nav.businesses": "Businesses",
+  "nav.map": "Map",
+  "nav.admin": "Admin",
+  "nav.dashboard": "Dashboard",
+  "nav.businessDashboard": "Business Dashboard",
+  "nav.askAi": "Ask Luxor AI",
+  "nav.signIn": "Sign in",
+  "nav.signOut": "Sign out",
+  "nav.signInUp": "Sign in / Sign up",
+
+  // Footer
+  "footer.explore": "Explore",
+  "footer.plan": "Plan",
+  "footer.business": "Business",
+  "footer.interactiveMap": "Interactive Map",
+  "footer.directory": "Business Directory",
+  "footer.listBusiness": "List your business",
+  "footer.businessSignIn": "Business sign in",
+  "footer.locationTitle": "Luxor, Egypt",
+  "footer.locationText":
+    "Where the Nile splits the world into the land of the living and the land of the dead.",
+  "footer.copyright": "© {year} Luxor AI — Crafted for travelers and storytellers.",
+
+  // Generic states
+  "common.loading": "Loading…",
+  "common.pleaseWait": "Please wait…",
+  "common.viewAll": "View all",
+  "common.details": "Details",
+  "common.back": "Back",
+  "common.save": "Save",
+  "common.cancel": "Cancel",
+  "common.delete": "Delete",
+  "common.empty": "Nothing here yet.",
+
+  // 404 / errors
+  "error.404Title": "Lost in the desert",
+  "error.404Text": "That page wandered off the map. Let's get you back to Luxor.",
+  "error.404Home": "Return home",
+  "error.crashTitle": "Something fell off the obelisk",
+  "error.crashText": "Try again — the gods of Karnak are forgiving.",
+  "error.retry": "Try again",
+
+  // Home
+  "home.badge": "Smart tourism + AI marketing · Luxor, Egypt",
+  "home.heroTitle1": "Walk among",
+  "home.heroTitleHighlight": "pharaohs",
+  "home.heroTitle2": "Plan it like a local.",
+  "home.heroText":
+    "Luxor AI curates the world's greatest open-air museum — temples, tombs, river sunsets and the perfect tagine — and gives local businesses an AI marketing studio of their own.",
+  "home.exploreCta": "Explore attractions",
+  "home.listBusiness": "List your business",
+  "home.quick.attractions": "Attractions",
+  "home.quick.attractionsDesc": "Temples, tombs & timeless rituals.",
+  "home.quick.events": "Events",
+  "home.quick.eventsDesc": "Opera at Hatshepsut, balloon festivals.",
+  "home.quick.bazaars": "Bazaars",
+  "home.quick.bazaarsDesc": "Alabaster, papyrus, fair-trade crafts.",
+  "home.quick.directory": "Directory",
+  "home.quick.directoryDesc": "Verified hotels, restaurants & tours.",
+  "home.featuredEyebrow": "Must visit",
+  "home.featuredTitle": "Iconic Luxor",
+  "home.bizEyebrow": "For businesses",
+  "home.bizTitle": "AI marketing for Luxor's hosts, chefs & guides",
+  "home.bizText":
+    "Register your hotel, restaurant, bazaar or tour company and unlock a full AI marketing studio — Facebook posts, Instagram captions, hashtag sets, campaign ideas and promo video scripts, on-brand and in seconds.",
+  "home.bizRegister": "Register your business",
+  "home.bizSignIn": "Business sign in",
+  "home.bizFeature1": "Profile management & verification",
+  "home.bizFeature2": "Live visitor analytics dashboard",
+  "home.bizFeature3": "Unlimited offers & promotions",
+  "home.bizFeature4": "Facebook & Instagram content",
+  "home.bizFeature5": "Hashtag and campaign generators",
+  "home.bizFeature6": "Promotional video scripts",
+  "home.value1Title": "Ask Luxor AI",
+  "home.value1Desc":
+    "An AI Egyptologist in your pocket — opening hours, tomb tips, hidden cafés.",
+  "home.value2Title": "Curated itineraries",
+  "home.value2Desc": "From 2-day blitzes to slow week-long stays, planned hour by hour.",
+  "home.value3Title": "Real depth",
+  "home.value3Desc": "Every site backed by history, context, and travel-tested advice.",
+  "home.mapEyebrow": "Orient yourself",
+  "home.mapTitle": "East Bank, West Bank, and the river between",
+  "home.mapText":
+    "Luxor lives on two sides of the Nile — the living temples on the east, the eternal tombs on the west. Our interactive map plots every site.",
+  "home.mapCta": "Open interactive map",
+};

@@ -1,3 +1,4 @@
+
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -27,10 +28,11 @@ function HotelsPage() {
     <BusinessDirectory
       config={{
         type: "Hotel",
-        eyebrow: t("hotelsEyebrow"),
-        title: t("hotelsTitle"),
-        subtitle: t("hotelsSubtitle"),
+        eyebrow: t("hotels.eyebrow"),
+        title: t("hotels.title"),
+        subtitle: t("hotels.subtitle"),
       }}
     />
   );
 }
+

@@ -21,7 +21,9 @@ const TYPES: BusinessType[] = [
 export const Route = createFileRoute("/businesses")({
   head: () => ({
     meta: [
-      { title: "Business Directory — Luxor AI" },
+      {
+        title: "Business Directory — Luxor AI",
+      },
       {
         name: "description",
         content:
@@ -33,7 +35,6 @@ export const Route = createFileRoute("/businesses")({
       },
     ],
   }),
-
   component: BusinessesPage,
 });
 
@@ -51,44 +52,49 @@ function BusinessesPage() {
         .eq("status", "approved")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       return data;
     },
   });
 
-  const list = useMemo(
-    () =>
-      (data ?? []).filter(
-        (b) => filter === "All" || b.type === filter
-      ),
-    [data, filter]
-  );
+  const list = useMemo(() => {
+    return (data ?? []).filter(
+      (business) =>
+        filter === "All" || business.type === filter
+    );
+  }, [data, filter]);
 
   const logVisit = async (id: string) => {
-    await supabase
-      .from("business_visits")
-      .insert({ business_id: id });
+    try {
+      await supabase
+        .from("business_visits")
+        .insert({ business_id: id });
+    } catch (error) {
+      console.error("Failed to record business visit:", error);
+    }
   };
 
   const getBusinessTypeLabel = (
     type: BusinessType | "All"
-  ) => {
+  ): string => {
     switch (type) {
       case "Hotel":
-        return t("hotels");
+        return t("businessType.Hotel");
 
       case "Restaurant":
-        return t("restaurants");
+        return t("businessType.Restaurant");
 
       case "Bazaar":
-        return t("bazaars");
+        return t("businessType.Bazaar");
 
       case "Tour Company":
-        return t("itineraries");
+        return t("businessType.Tour Company");
 
       case "All":
-        return t("all");
+        return t("businessType.All");
 
       default:
         return type;
@@ -97,11 +103,10 @@ function BusinessesPage() {
 
   return (
     <div>
-      {/* HERO */}
       <section className="relative isolate overflow-hidden">
         <img
           src={karnak}
-          alt=""
+          alt="Luxor"
           className="absolute inset-0 h-full w-full object-cover opacity-30"
         />
 
@@ -109,15 +114,15 @@ function BusinessesPage() {
 
         <div className="relative mx-auto max-w-7xl px-6 py-20 text-center">
           <p className="text-gold text-xs uppercase tracking-[0.3em] divider-gold">
-            {t("businessDirectoryEyebrow")}
+            {t("businesses.eyebrow")}
           </p>
 
           <h1 className="mt-4 font-display text-5xl">
-            {t("businessDirectoryTitle")}
+            {t("businesses.title")}
           </h1>
 
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-            {t("businessDirectoryDescription")}
+            {t("businesses.subtitle")}
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -125,25 +130,25 @@ function BusinessesPage() {
               to="/business/register"
               className="rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-gold"
             >
-              {t("listYourBusiness")}
+              {t("businesses.listYours")}
             </Link>
 
             <Link
               to="/business/login"
               className="rounded-full border border-gold/40 bg-midnight/50 px-5 py-2.5 text-sm text-gold"
             >
-              {t("businessSignIn")}
+              {t("businesses.signIn")}
             </Link>
           </div>
         </div>
       </section>
 
-      {/* FILTERS */}
       <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-wrap justify-center gap-2">
           {(["All", ...TYPES] as const).map((type) => (
             <button
               key={type}
+              type="button"
               onClick={() => setFilter(type)}
               className={`rounded-full border px-4 py-1.5 text-sm transition ${
                 filter === type
@@ -156,85 +161,85 @@ function BusinessesPage() {
           ))}
         </div>
 
-        {/* LOADING */}
         {isLoading && (
           <p className="mt-10 text-center text-muted-foreground">
-            {t("loading")}
+            {t("businesses.loading")}
           </p>
         )}
 
-        {/* BUSINESS LIST */}
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {list.map((b, i) => {
-            const offers = (b.offers ?? []).filter(
-              (o) => o.active
+          {list.map((business, index) => {
+            const offers = (business.offers ?? []).filter(
+              (offer) => offer.active
             );
 
             return (
               <Link
-                key={b.id}
+                key={business.id}
                 to="/businesses/$id"
-                params={{ id: b.id }}
+                params={{ id: business.id }}
                 onClick={() => {
-                  void logVisit(b.id);
+                  void logVisit(business.id);
                 }}
-                className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-elegant hover:border-gold/50 transition"
+                className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-elegant transition hover:border-gold/50"
               >
-                {/* IMAGE */}
                 <div className="relative aspect-[4/3] overflow-hidden bg-midnight">
-                  {b.image_url ? (
-                    <img
-                      src={b.image_url}
-                      alt={b.name}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <img
-                      src={imageForBusinessType(b.type, i)}
-                      alt={b.name}
-                      className="h-full w-full object-cover"
-                    />
-                  )}
+                  <img
+                    src={
+                      business.image_url ||
+                      imageForBusinessType(
+                        business.type,
+                        index
+                      )
+                    }
+                    alt={business.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-700 hover:scale-105"
+                  />
 
-                  <span className="absolute top-3 left-3 rounded-full bg-midnight/70 border border-gold/40 px-3 py-1 text-xs text-gold">
-                    {getBusinessTypeLabel(b.type)}
+                  <span className="absolute left-3 top-3 rounded-full border border-gold/40 bg-midnight/70 px-3 py-1 text-xs text-gold">
+                    {getBusinessTypeLabel(business.type)}
                   </span>
                 </div>
 
-                {/* CONTENT */}
                 <div className="p-6">
                   <h2 className="font-display text-xl">
-                    {b.name}
+                    {business.name}
                   </h2>
 
-                  {b.description && (
-                    <p className="mt-2 text-sm text-foreground/80 line-clamp-3">
-                      {b.description}
+                  {business.description && (
+                    <p className="mt-2 line-clamp-3 text-sm text-foreground/80">
+                      {business.description}
                     </p>
                   )}
 
                   <div className="mt-4 space-y-1.5 text-xs text-muted-foreground">
-                    {b.address && (
+                    {business.address && (
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-3.5 w-3.5" />
-                        {b.address}
+                        <MapPin className="h-3.5 w-3.5 shrink-0" />
+                        <span>{business.address}</span>
                       </div>
                     )}
 
-                    {b.phone && (
+                    {business.phone && (
                       <div className="flex items-center gap-2">
-                        <Phone className="h-3.5 w-3.5" />
-                        {b.phone}
+                        <Phone className="h-3.5 w-3.5 shrink-0" />
+                        <span>{business.phone}</span>
                       </div>
                     )}
                   </div>
 
-                  {/* OFFER */}
                   {offers.length > 0 && (
                     <div className="mt-3 rounded-lg border border-gold/30 bg-gold/5 p-3 text-xs">
-                      <div className="flex items-center gap-2 text-gold font-semibold">
-                        <Tag className="h-3.5 w-3.5" />
-                        {offers[0].title} · {offers[0].discount}
+                      <div className="flex items-center gap-2 font-semibold text-gold">
+                        <Tag className="h-3.5 w-3.5 shrink-0" />
+
+                        <span>
+                          {offers[0].title}
+                          {offers[0].discount
+                            ? ` · ${offers[0].discount}`
+                            : ""}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -243,18 +248,17 @@ function BusinessesPage() {
             );
           })}
 
-          {/* NO BUSINESSES */}
           {!isLoading && list.length === 0 && (
-            <div className="col-span-full text-center py-16 text-muted-foreground">
-              <Store className="h-10 w-10 mx-auto text-gold/40 mb-4" />
+            <div className="col-span-full py-16 text-center text-muted-foreground">
+              <Store className="mx-auto mb-4 h-10 w-10 text-gold/40" />
 
-              <p>{t("noVerifiedBusinesses")}</p>
+              <p>{t("businesses.noneInCategory")}</p>
 
               <Link
                 to="/business/register"
-                className="text-gold hover:underline text-sm"
+                className="text-sm text-gold hover:underline"
               >
-                {t("beFirstToList")}
+                {t("businesses.beFirst")}
               </Link>
             </div>
           )}

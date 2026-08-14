@@ -50,21 +50,21 @@ function EventsPage() {
     <div className="mx-auto max-w-7xl px-6 py-16">
       {/* Page heading */}
       <p className="text-gold text-xs uppercase tracking-[0.3em] divider-gold text-center">
-        {t("eventsEyebrow")}
+        {t("events.eyebrow")}
       </p>
 
       <h1 className="mt-4 text-center font-display text-4xl md:text-5xl">
-        {t("eventsTitle")}
+        {t("events.title")}
       </h1>
 
       <p className="mt-4 text-center max-w-2xl mx-auto text-muted-foreground">
-        {t("eventsDescription")}
+        {t("events.subtitle")}
       </p>
 
       {/* Loading */}
       {isLoading && (
         <p className="mt-10 text-center text-muted-foreground">
-          {t("loading")}
+          {t("events.loading")}
         </p>
       )}
 
@@ -140,3 +140,4 @@ function EventsPage() {
     </div>
   );
 }
+

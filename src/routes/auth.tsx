@@ -1,13 +1,21 @@
-import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    redirect: typeof s.redirect === "string" ? s.redirect : undefined,
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect:
+      typeof search.redirect === "string"
+        ? search.redirect
+        : undefined,
   }),
 
   head: () => ({
@@ -21,6 +29,7 @@ function AuthPage() {
   const navigate = useNavigate();
   const { redirect } = useSearch({ from: "/auth" });
   const { user, loading } = useAuth();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,12 +38,14 @@ function AuthPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate({ to: redirect ?? "/" });
+      void navigate({
+        to: redirect ?? "/",
+      });
     }
   }, [loading, user, redirect, navigate]);
 
-  const onSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     setBusy(true);
     setErr(null);
@@ -70,49 +81,48 @@ function AuthPage() {
 
   return (
     <div className="mx-auto max-w-md px-6 py-20">
-
-      <p className="text-gold text-xs uppercase tracking-[0.3em] divider-gold text-center">
-        Luxor AI
+      <p className="text-center text-gold text-xs uppercase tracking-[0.3em] divider-gold">
+        {t("auth.tagline")}
       </p>
 
       <h1 className="mt-3 text-center font-display text-4xl">
-        Welcome back
+        {t("auth.welcomeBack")}
       </h1>
 
       <p className="mt-3 text-center text-sm text-muted-foreground">
-        Sign in to your Luxor AI account
+        {t("auth.signIn")}
       </p>
 
       <div className="mt-8 rounded-2xl border border-border/60 bg-card/60 p-7">
-
-        {/* Google Sign In */}
         <button
           type="button"
           onClick={onGoogleSignIn}
           disabled={busy}
           className="w-full rounded-full border border-border py-3 text-sm font-medium transition hover:bg-muted disabled:opacity-60"
         >
-          {busy ? "Please wait…" : "Continue with Google"}
+          {busy
+            ? t("auth.pleaseWait")
+            : t("auth.continueWithGoogle")}
         </button>
 
         <div className="my-5 flex items-center gap-3">
           <div className="h-px flex-1 bg-border" />
+
           <span className="text-xs text-muted-foreground">
             OR
           </span>
+
           <div className="h-px flex-1 bg-border" />
         </div>
 
-        {/* Email Sign In */}
         <form onSubmit={onSignIn} className="space-y-5">
-
           <div className="space-y-2">
-            <Label>Email</Label>
+            <Label>{t("auth.email")}</Label>
 
             <Input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               required
               autoComplete="email"
               placeholder="your@email.com"
@@ -120,12 +130,12 @@ function AuthPage() {
           </div>
 
           <div className="space-y-2">
-            <Label>Password</Label>
+            <Label>{t("auth.password")}</Label>
 
             <Input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
               required
               autoComplete="current-password"
               placeholder="••••••••"
@@ -143,11 +153,11 @@ function AuthPage() {
             disabled={busy}
             className="w-full rounded-full bg-gradient-gold px-5 py-3 text-sm font-medium text-primary-foreground shadow-gold disabled:opacity-60"
           >
-            {busy ? "Signing in…" : "Sign in"}
+            {busy
+              ? t("auth.pleaseWait")
+              : t("auth.signIn")}
           </button>
-
         </form>
-
       </div>
     </div>
   );

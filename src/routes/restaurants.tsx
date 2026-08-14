@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-
 import { BusinessDirectory } from "@/components/site/BusinessDirectory";
 
 export const Route = createFileRoute("/restaurants")({
@@ -36,9 +35,9 @@ function RestaurantsPage() {
     <BusinessDirectory
       config={{
         type: "Restaurant",
-        eyebrow: t("restaurantsEyebrow"),
-        title: t("restaurantsTitle"),
-        subtitle: t("restaurantsSubtitle"),
+        eyebrow: t("restaurants.eyebrow"),
+        title: t("restaurants.title"),
+        subtitle: t("restaurants.subtitle"),
       }}
     />
   );

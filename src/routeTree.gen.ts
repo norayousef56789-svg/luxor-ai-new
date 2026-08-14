@@ -17,10 +17,10 @@ import { Route as EventsRouteImport } from './routes/events'
 import { Route as BusinessesRouteImport } from './routes/businesses'
 import { Route as BazaarsRouteImport } from './routes/bazaars'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AttractionsRouteImport } from './routes/attractions'
 import { Route as AskLuxorRouteImport } from './routes/ask-luxor'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AttractionsIndexRouteImport } from './routes/attractions.index'
 import { Route as BusinessesIdRouteImport } from './routes/businesses.$id'
 import { Route as BusinessRegisterRouteImport } from './routes/business.register'
 import { Route as BusinessLoginRouteImport } from './routes/business.login'
@@ -69,11 +69,6 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AttractionsRoute = AttractionsRouteImport.update({
-  id: '/attractions',
-  path: '/attractions',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AskLuxorRoute = AskLuxorRouteImport.update({
   id: '/ask-luxor',
   path: '/ask-luxor',
@@ -87,6 +82,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AttractionsIndexRoute = AttractionsIndexRouteImport.update({
+  id: '/attractions/',
+  path: '/attractions/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessesIdRoute = BusinessesIdRouteImport.update({
@@ -110,9 +110,9 @@ const BusinessDashboardRoute = BusinessDashboardRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AttractionsSlugRoute = AttractionsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => AttractionsRoute,
+  id: '/attractions/$slug',
+  path: '/attractions/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMarketingRoute = ApiMarketingRouteImport.update({
   id: '/api/marketing',
@@ -129,7 +129,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/ask-luxor': typeof AskLuxorRoute
-  '/attractions': typeof AttractionsRouteWithChildren
   '/auth': typeof AuthRoute
   '/bazaars': typeof BazaarsRoute
   '/businesses': typeof BusinessesRouteWithChildren
@@ -145,12 +144,12 @@ export interface FileRoutesByFullPath {
   '/business/login': typeof BusinessLoginRoute
   '/business/register': typeof BusinessRegisterRoute
   '/businesses/$id': typeof BusinessesIdRoute
+  '/attractions/': typeof AttractionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/ask-luxor': typeof AskLuxorRoute
-  '/attractions': typeof AttractionsRouteWithChildren
   '/auth': typeof AuthRoute
   '/bazaars': typeof BazaarsRoute
   '/businesses': typeof BusinessesRouteWithChildren
@@ -166,13 +165,13 @@ export interface FileRoutesByTo {
   '/business/login': typeof BusinessLoginRoute
   '/business/register': typeof BusinessRegisterRoute
   '/businesses/$id': typeof BusinessesIdRoute
+  '/attractions': typeof AttractionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/ask-luxor': typeof AskLuxorRoute
-  '/attractions': typeof AttractionsRouteWithChildren
   '/auth': typeof AuthRoute
   '/bazaars': typeof BazaarsRoute
   '/businesses': typeof BusinessesRouteWithChildren
@@ -188,6 +187,7 @@ export interface FileRoutesById {
   '/business/login': typeof BusinessLoginRoute
   '/business/register': typeof BusinessRegisterRoute
   '/businesses/$id': typeof BusinessesIdRoute
+  '/attractions/': typeof AttractionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -195,7 +195,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/ask-luxor'
-    | '/attractions'
     | '/auth'
     | '/bazaars'
     | '/businesses'
@@ -211,12 +210,12 @@ export interface FileRouteTypes {
     | '/business/login'
     | '/business/register'
     | '/businesses/$id'
+    | '/attractions/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
     | '/ask-luxor'
-    | '/attractions'
     | '/auth'
     | '/bazaars'
     | '/businesses'
@@ -232,12 +231,12 @@ export interface FileRouteTypes {
     | '/business/login'
     | '/business/register'
     | '/businesses/$id'
+    | '/attractions'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/ask-luxor'
-    | '/attractions'
     | '/auth'
     | '/bazaars'
     | '/businesses'
@@ -253,13 +252,13 @@ export interface FileRouteTypes {
     | '/business/login'
     | '/business/register'
     | '/businesses/$id'
+    | '/attractions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AskLuxorRoute: typeof AskLuxorRoute
-  AttractionsRoute: typeof AttractionsRouteWithChildren
   AuthRoute: typeof AuthRoute
   BazaarsRoute: typeof BazaarsRoute
   BusinessesRoute: typeof BusinessesRouteWithChildren
@@ -270,9 +269,11 @@ export interface RootRouteChildren {
   RestaurantsRoute: typeof RestaurantsRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiMarketingRoute: typeof ApiMarketingRoute
+  AttractionsSlugRoute: typeof AttractionsSlugRoute
   BusinessDashboardRoute: typeof BusinessDashboardRoute
   BusinessLoginRoute: typeof BusinessLoginRoute
   BusinessRegisterRoute: typeof BusinessRegisterRoute
+  AttractionsIndexRoute: typeof AttractionsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -333,13 +334,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/attractions': {
-      id: '/attractions'
-      path: '/attractions'
-      fullPath: '/attractions'
-      preLoaderRoute: typeof AttractionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/ask-luxor': {
       id: '/ask-luxor'
       path: '/ask-luxor'
@@ -359,6 +353,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/attractions/': {
+      id: '/attractions/'
+      path: '/attractions'
+      fullPath: '/attractions/'
+      preLoaderRoute: typeof AttractionsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/businesses/$id': {
@@ -391,10 +392,10 @@ declare module '@tanstack/react-router' {
     }
     '/attractions/$slug': {
       id: '/attractions/$slug'
-      path: '/$slug'
+      path: '/attractions/$slug'
       fullPath: '/attractions/$slug'
       preLoaderRoute: typeof AttractionsSlugRouteImport
-      parentRoute: typeof AttractionsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/marketing': {
       id: '/api/marketing'
@@ -413,18 +414,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AttractionsRouteChildren {
-  AttractionsSlugRoute: typeof AttractionsSlugRoute
-}
-
-const AttractionsRouteChildren: AttractionsRouteChildren = {
-  AttractionsSlugRoute: AttractionsSlugRoute,
-}
-
-const AttractionsRouteWithChildren = AttractionsRoute._addFileChildren(
-  AttractionsRouteChildren,
-)
-
 interface BusinessesRouteChildren {
   BusinessesIdRoute: typeof BusinessesIdRoute
 }
@@ -441,7 +430,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AskLuxorRoute: AskLuxorRoute,
-  AttractionsRoute: AttractionsRouteWithChildren,
   AuthRoute: AuthRoute,
   BazaarsRoute: BazaarsRoute,
   BusinessesRoute: BusinessesRouteWithChildren,
@@ -452,9 +440,11 @@ const rootRouteChildren: RootRouteChildren = {
   RestaurantsRoute: RestaurantsRoute,
   ApiChatRoute: ApiChatRoute,
   ApiMarketingRoute: ApiMarketingRoute,
+  AttractionsSlugRoute: AttractionsSlugRoute,
   BusinessDashboardRoute: BusinessDashboardRoute,
   BusinessLoginRoute: BusinessLoginRoute,
   BusinessRegisterRoute: BusinessRegisterRoute,
+  AttractionsIndexRoute: AttractionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

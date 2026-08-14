@@ -32,9 +32,9 @@ function BazaarsPage() {
     <BusinessDirectory
       config={{
         type: "Bazaar",
-        eyebrow: t("bazaarsEyebrow"),
-        title: t("bazaarsTitle"),
-        subtitle: t("bazaarsDescription"),
+        eyebrow: t("bazaars.eyebrow"),
+        title: t("bazaars.title"),
+        subtitle: t("bazaars.subtitle"),
       }}
     />
   );

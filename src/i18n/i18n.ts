@@ -1,9 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import en from "./en.json";
-import ar from "./ar.json";
-import zh from "./zh.json";
+import { en } from "../lib/locales/en";
+import { ar } from "../lib/locales/ar";
+import { zh } from "../lib/locales/zh";
 
 const savedLanguage =
   typeof window !== "undefined"

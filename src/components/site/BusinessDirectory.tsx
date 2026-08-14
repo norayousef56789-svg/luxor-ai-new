@@ -54,20 +54,20 @@ export function BusinessDirectory({
     }
   };
 
-  // اسم نوع النشاط حسب اللغة
+  // Business type translated according to selected language
   const businessTypeLabel = (() => {
     switch (config.type) {
       case "Hotel":
-        return t("hotels");
+        return t("nav.hotels");
 
       case "Restaurant":
-        return t("restaurants");
+        return t("nav.restaurants");
 
       case "Bazaar":
-        return t("bazaars");
+        return t("nav.bazaars");
 
       case "Tour Company":
-        return t("itineraries");
+        return t("nav.itineraries");
 
       default:
         return config.type;
@@ -93,7 +93,7 @@ export function BusinessDirectory({
       {/* Loading */}
       {isLoading && (
         <p className="mt-10 text-center text-muted-foreground">
-          {t("loading")}
+          {t("common.loading")}
         </p>
       )}
 
@@ -115,10 +115,8 @@ export function BusinessDirectory({
               }}
               className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-elegant transition hover:border-gold/50"
             >
-
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden bg-midnight">
-
                 <img
                   src={
                     business.image_url ||
@@ -133,12 +131,10 @@ export function BusinessDirectory({
                 <span className="absolute left-3 top-3 rounded-full border border-gold/40 bg-midnight/70 px-3 py-1 text-xs text-gold">
                   {businessTypeLabel}
                 </span>
-
               </div>
 
               {/* Information */}
               <div className="p-6">
-
                 <h2 className="font-display text-xl">
                   {business.name}
                 </h2>
@@ -151,7 +147,6 @@ export function BusinessDirectory({
 
                 {/* Address + Phone */}
                 <div className="mt-4 space-y-1.5 text-xs text-muted-foreground">
-
                   {business.address && (
                     <div className="flex items-center gap-2">
                       <MapPin className="h-3.5 w-3.5" />
@@ -165,13 +160,11 @@ export function BusinessDirectory({
                       <span>{business.phone}</span>
                     </div>
                   )}
-
                 </div>
 
                 {/* Offer */}
                 {offers.length > 0 && (
                   <div className="mt-4 rounded-lg border border-gold/30 bg-gold/5 p-3 text-xs">
-
                     <div className="flex items-center gap-2 font-semibold text-gold">
                       <Tag className="h-3.5 w-3.5" />
 
@@ -182,12 +175,9 @@ export function BusinessDirectory({
                           : ""}
                       </span>
                     </div>
-
                   </div>
                 )}
-
               </div>
-
             </Link>
           );
         })}
@@ -195,16 +185,15 @@ export function BusinessDirectory({
         {/* No businesses */}
         {!isLoading && (data ?? []).length === 0 && (
           <p className="col-span-full py-20 text-center text-muted-foreground">
-            {t("noListings")}{" "}
+            {t("common.empty")}{" "}
             <Link
               to="/business/register"
               className="text-gold hover:underline"
             >
-              {t("listYourBusiness")}
+              {t("home.listBusiness")}
             </Link>
           </p>
         )}
-
       </div>
     </div>
   );
