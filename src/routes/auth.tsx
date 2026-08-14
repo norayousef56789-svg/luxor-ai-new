@@ -44,21 +44,52 @@ function AuthPage() {
     }
   }, [loading, user, redirect, navigate]);
 
-  const onSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
+  const sendAdminNotification = async (
+    loginEmail: string,
+    name?: string,
+  ) => {
+    try {
+      await supabase.functions.invoke("notify-admin-signup", {
+        body: {
+          type: "login",
+          email: loginEmail,
+          name: name || "غير متوفر",
+        },
+      });
+    } catch (notificationError) {
+      console.error(
+        "Admin notification failed:",
+        notificationError,
+      );
+    }
+  };
+
+  const onSignIn = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
     setBusy(true);
     setErr(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data, error } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
     setBusy(false);
 
     if (error) {
       setErr(error.message);
+      return;
+    }
+
+    if (data.user?.email) {
+      void sendAdminNotification(
+        data.user.email,
+        data.user.user_metadata?.full_name,
+      );
     }
   };
 
@@ -66,12 +97,13 @@ function AuthPage() {
     setBusy(true);
     setErr(null);
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth`,
-      },
-    });
+    const { error } =
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth`,
+        },
+      });
 
     if (error) {
       setBusy(false);
@@ -115,14 +147,19 @@ function AuthPage() {
           <div className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={onSignIn} className="space-y-5">
+        <form
+          onSubmit={onSignIn}
+          className="space-y-5"
+        >
           <div className="space-y-2">
             <Label>{t("auth.email")}</Label>
 
             <Input
               type="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
               required
               autoComplete="email"
               placeholder="your@email.com"
@@ -135,7 +172,9 @@ function AuthPage() {
             <Input
               type="password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) =>
+                setPassword(event.target.value)
+              }
               required
               autoComplete="current-password"
               placeholder="••••••••"

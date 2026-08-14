@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { attractions } from "@/lib/data";
 import { MapPin } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/map")({
   head: () => ({
@@ -29,6 +30,12 @@ export const Route = createFileRoute("/map")({
 function MapPage() {
   const { t } = useTranslation();
 
+  const [selectedAttraction, setSelectedAttraction] = useState(attractions[0]);
+
+  const { lat, lng } = selectedAttraction.coords;
+
+  const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.015}%2C${lat - 0.015}%2C${lng + 0.015}%2C${lat + 0.015}&layer=mapnik&marker=${lat}%2C${lng}`;
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-16">
 
@@ -50,9 +57,10 @@ function MapPage() {
 
         <div className="aspect-[16/10] rounded-2xl overflow-hidden border border-border/60 shadow-elegant">
           <iframe
+            key={selectedAttraction.slug}
             title={t("mapTitle")}
             className="h-full w-full"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=32.55%2C25.66%2C32.72%2C25.78&layer=mapnik&marker=25.7188%2C32.6573"
+            src={mapSrc}
           />
         </div>
 
@@ -68,7 +76,12 @@ function MapPage() {
             {attractions.map((a) => (
               <li
                 key={a.slug}
-                className="flex items-start gap-3 text-sm"
+                onClick={() => setSelectedAttraction(a)}
+                className={`flex items-start gap-3 text-sm cursor-pointer rounded-lg p-2 transition-colors ${
+                  selectedAttraction.slug === a.slug
+                    ? "bg-gold/10"
+                    : "hover:bg-muted"
+                }`}
               >
                 <MapPin className="h-4 w-4 text-gold mt-0.5 shrink-0" />
 
