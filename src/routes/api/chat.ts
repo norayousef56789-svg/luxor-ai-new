@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { groq } from "@ai-sdk/groq";
+import {
+  convertToModelMessages,
+  streamText,
+  type UIMessage,
+} from "ai";
+import { google } from "@ai-sdk/google";
 
 const SYSTEM_PROMPT = `
 You are Luxor AI, an AI travel assistant for Luxor, Egypt.
@@ -10,7 +14,7 @@ IMPORTANT LANGUAGE RULES:
 - If the user writes in English, answer in English.
 - If the user mixes Arabic and English, answer in the same mixed style.
 - Never force English if the user is speaking Arabic.
-- Be friendly and helpful.
+- Be friendly, helpful, and natural.
 
 You help visitors with:
 - Tourist attractions in Luxor.
@@ -44,7 +48,7 @@ export const Route = createFileRoute("/api/chat")({
         }
 
         const result = streamText({
-          model: groq("qwen/qwen3.6-27b"),
+          model: google("gemini-3.6-flash"),
           system: SYSTEM_PROMPT,
           messages: await convertToModelMessages(messages),
         });
