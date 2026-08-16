@@ -188,49 +188,55 @@ export type Database = {
         Relationships: []
       }
       offers: {
-        Row: {
-          active: boolean
-          business_id: string
-          created_at: string
-          description: string | null
-          discount: string
-          id: string
-          title: string
-          updated_at: string
-          valid_until: string | null
-        }
-        Insert: {
-          active?: boolean
-          business_id: string
-          created_at?: string
-          description?: string | null
-          discount: string
-          id?: string
-          title: string
-          updated_at?: string
-          valid_until?: string | null
-        }
-        Update: {
-          active?: boolean
-          business_id?: string
-          created_at?: string
-          description?: string | null
-          discount?: string
-          id?: string
-          title?: string
-          updated_at?: string
-          valid_until?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "offers_business_id_fkey"
-            columns: ["business_id"]
-            isOneToOne: false
-            referencedRelation: "businesses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+  Row: {
+    active: boolean
+    business_id: string
+    created_at: string
+    description: string | null
+    discount: string
+    id: string
+    image_url: string | null
+    title: string
+    updated_at: string
+    valid_until: string | null
+  }
+
+  Insert: {
+    active?: boolean
+    business_id: string
+    created_at?: string
+    description?: string | null
+    discount: string
+    id?: string
+    image_url?: string | null
+    title: string
+    updated_at?: string
+    valid_until?: string | null
+  }
+
+  Update: {
+    active?: boolean
+    business_id?: string
+    created_at?: string
+    description?: string | null
+    discount?: string
+    id?: string
+    image_url?: string | null
+    title?: string
+    updated_at?: string | null
+    valid_until?: string | null
+  }
+
+  Relationships: [
+    {
+      foreignKeyName: "offers_business_id_fkey"
+      columns: ["business_id"]
+      isOneToOne: false
+      referencedRelation: "businesses"
+      referencedColumns: ["id"]
+    },
+  ]
+}
       profiles: {
         Row: {
           avatar_url: string | null

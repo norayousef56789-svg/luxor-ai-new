@@ -1,14 +1,25 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+} from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { registerBusinessAccount } from "@/lib/business.functions";
+
+import {
+  registerBusinessAccount,
+  registerBusinessForExistingUser,
+} from "@/lib/business.functions";
+
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-type BusinessType = Database["public"]["Enums"]["business_type"];
+type BusinessType =
+  Database["public"]["Enums"]["business_type"];
 
 const TYPES: BusinessType[] = [
   "Hotel",
@@ -19,14 +30,25 @@ const TYPES: BusinessType[] = [
 
 export const Route = createFileRoute("/business/register")({
   head: () => ({
-    meta: [{ title: "Register your business — Luxor AI" }],
+    meta: [
+      {
+        title: "Register your business — Luxor AI",
+      },
+    ],
   }),
   component: RegisterPage,
 });
 
 function RegisterPage() {
   const navigate = useNavigate();
+
+  // التسجيل الجديد
   const register = useServerFn(registerBusinessAccount);
+
+  // تسجيل Business لحساب موجود بالفعل
+  const registerExisting = useServerFn(
+    registerBusinessForExistingUser,
+  );
 
   const [form, setForm] = useState({
     fullName: "",
@@ -42,6 +64,47 @@ function RegisterPage() {
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  // هل المستخدم عامل Login بالفعل؟
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // إيميل المستخدم الحالي
+  const [currentEmail, setCurrentEmail] = useState("");
+
+  // =====================================================
+  // معرفة حالة تسجيل الدخول عند فتح الصفحة
+  // =====================================================
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        setIsLoggedIn(true);
+
+        const email = session.user.email ?? "";
+
+        setCurrentEmail(email);
+
+        setForm((current) => ({
+          ...current,
+          email,
+          fullName:
+            current.fullName ||
+            session.user.user_metadata?.full_name ||
+            "",
+        }));
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  // =====================================================
+  // تغيير قيم الفورم
+  // =====================================================
+
   const set = <K extends keyof typeof form>(
     k: K,
     v: (typeof form)[K],
@@ -52,6 +115,10 @@ function RegisterPage() {
     }));
   };
 
+  // =====================================================
+  // Submit
+  // =====================================================
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -59,31 +126,101 @@ function RegisterPage() {
     setBusy(true);
 
     try {
-      // 1. إنشاء حساب صاحب النشاط
-      await register({ data: form });
+      // نجيب الـsession مرة ثانية وقت التسجيل
+      // للتأكد إن المستخدم ما زال Logged In
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
 
-      // 2. تسجيل الدخول بالحساب الذي تم إنشاؤه
-      const { error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email: form.email,
-          password: form.password,
-        });
-
-      if (signInError) {
-        throw signInError;
+      if (sessionError) {
+        throw sessionError;
       }
 
-      // 3. إرسال إشعار للأدمن بأن صاحب نشاط جديد سجّل
-      const { error: notificationError } =
-        await supabase.functions.invoke("notify-admin-signup", {
-          body: {
-            type: "signup",
-            email: form.email,
-            name: form.fullName,
+      // =================================================
+      // الحالة الأولى:
+      // المستخدم داخل الموقع بالفعل
+      // =================================================
+
+      if (session?.user && session.access_token) {
+        const email = session.user.email;
+
+        if (!email) {
+          throw new Error(
+            "Your account does not have an email address.",
+          );
+        }
+
+        await registerExisting({
+          data: {
+            fullName:
+              form.fullName ||
+              session.user.user_metadata?.full_name ||
+              email,
+
+            businessName: form.businessName,
+
+            type: form.type,
+
+            phone: form.phone,
+
+            // نستخدم إيميل الحساب الحالي
+            email,
+
+            address: form.address,
+
+            description: form.description,
+          },
+
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
           },
         });
+      }
 
-      // لو حصلت مشكلة في الإشعار، لا نمنع صاحب النشاط من الدخول
+      // =================================================
+      // الحالة الثانية:
+      // المستخدم مش عامل Login
+      // إنشاء حساب جديد
+      // =================================================
+
+      else {
+        await register({
+          data: form,
+        });
+
+        // تسجيل الدخول بالحساب الجديد
+        const { error: signInError } =
+          await supabase.auth.signInWithPassword({
+            email: form.email,
+            password: form.password,
+          });
+
+        if (signInError) {
+          throw signInError;
+        }
+      }
+
+      // =================================================
+      // إرسال إشعار للأدمن
+      // =================================================
+
+      const notificationEmail =
+        session?.user?.email || form.email;
+
+      const { error: notificationError } =
+        await supabase.functions.invoke(
+          "notify-admin-signup",
+          {
+            body: {
+              type: "signup",
+              email: notificationEmail,
+              name: form.fullName,
+            },
+          },
+        );
+
+      // لو الإشعار فشل، لا نمنع صاحب النشاط من الدخول
       if (notificationError) {
         console.error(
           "Admin notification failed:",
@@ -91,7 +228,10 @@ function RegisterPage() {
         );
       }
 
-      // 4. الدخول إلى لوحة تحكم صاحب النشاط
+      // =================================================
+      // الانتقال إلى Dashboard
+      // =================================================
+
       navigate({
         to: "/business/dashboard",
       });
@@ -117,14 +257,38 @@ function RegisterPage() {
       </h1>
 
       <p className="mt-3 text-center text-muted-foreground">
-        Join Luxor's smart tourism platform. Listings are reviewed
-        by Luxor admins before going live.
+        Join Luxor's smart tourism platform. Listings are
+        reviewed by Luxor admins before going live.
       </p>
+
+      {/* =================================================
+          رسالة للمستخدم المسجل بالفعل
+      ================================================= */}
+
+      {isLoggedIn && (
+        <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-4 text-center">
+          <p className="text-sm text-muted-foreground">
+            You are signed in as
+          </p>
+
+          <p className="mt-1 font-medium text-gold">
+            {currentEmail}
+          </p>
+
+          <p className="mt-2 text-xs text-muted-foreground">
+            Your business will be linked to this account.
+          </p>
+        </div>
+      )}
 
       <form
         onSubmit={onSubmit}
         className="mt-10 space-y-5 rounded-2xl border border-border/60 bg-card/60 p-8"
       >
+        {/* =================================================
+            Full Name
+        ================================================= */}
+
         <div className="space-y-2">
           <Label>Your full name</Label>
 
@@ -136,6 +300,10 @@ function RegisterPage() {
             required
           />
         </div>
+
+        {/* =================================================
+            Business Name
+        ================================================= */}
 
         <div className="space-y-2">
           <Label>Business name</Label>
@@ -149,6 +317,10 @@ function RegisterPage() {
             placeholder="Nile Sunset Bazaar"
           />
         </div>
+
+        {/* =================================================
+            Business Type
+        ================================================= */}
 
         <div className="space-y-2">
           <Label>Business type</Label>
@@ -171,47 +343,62 @@ function RegisterPage() {
           </select>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label>Phone</Label>
-
-            <Input
-              value={form.phone}
-              onChange={(e) =>
-                set("phone", e.target.value)
-              }
-              required
-              placeholder="+20 …"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Email</Label>
-
-            <Input
-              type="email"
-              value={form.email}
-              onChange={(e) =>
-                set("email", e.target.value)
-              }
-              required
-            />
-          </div>
-        </div>
+        {/* =================================================
+            Phone
+        ================================================= */}
 
         <div className="space-y-2">
-          <Label>Password</Label>
+          <Label>Phone</Label>
 
           <Input
-            type="password"
-            value={form.password}
+            value={form.phone}
             onChange={(e) =>
-              set("password", e.target.value)
+              set("phone", e.target.value)
             }
             required
-            minLength={8}
+            placeholder="+20 …"
           />
         </div>
+
+        {/* =================================================
+            Email + Password
+            يظهروا فقط لو المستخدم مش عامل Login
+        ================================================= */}
+
+        {!isLoggedIn && (
+          <>
+            <div className="space-y-2">
+              <Label>Email</Label>
+
+              <Input
+                type="email"
+                value={form.email}
+                onChange={(e) =>
+                  set("email", e.target.value)
+                }
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Password</Label>
+
+              <Input
+                type="password"
+                value={form.password}
+                onChange={(e) =>
+                  set("password", e.target.value)
+                }
+                required
+                minLength={8}
+              />
+            </div>
+          </>
+        )}
+
+        {/* =================================================
+            Address
+        ================================================= */}
 
         <div className="space-y-2">
           <Label>Address</Label>
@@ -226,6 +413,10 @@ function RegisterPage() {
           />
         </div>
 
+        {/* =================================================
+            Description
+        ================================================= */}
+
         <div className="space-y-2">
           <Label>Description (optional)</Label>
 
@@ -238,11 +429,19 @@ function RegisterPage() {
           />
         </div>
 
+        {/* =================================================
+            Error
+        ================================================= */}
+
         {err && (
           <p className="text-sm text-destructive">
             {err}
           </p>
         )}
+
+        {/* =================================================
+            Submit
+        ================================================= */}
 
         <button
           type="submit"
@@ -250,19 +449,28 @@ function RegisterPage() {
           className="w-full rounded-full bg-gradient-gold px-5 py-3 text-sm font-medium text-primary-foreground shadow-gold disabled:opacity-60"
         >
           {busy
-            ? "Creating account…"
-            : "Create account & submit for approval"}
+            ? "Submitting…"
+            : isLoggedIn
+              ? "Submit business for approval"
+              : "Create account & submit for approval"}
         </button>
 
-        <p className="text-center text-xs text-muted-foreground">
-          Already registered?{" "}
-          <Link
-            to="/business/login"
-            className="text-gold hover:underline"
-          >
-            Sign in
-          </Link>
-        </p>
+        {/* =================================================
+            Login Link
+            يظهر فقط لغير المسجل
+        ================================================= */}
+
+        {!isLoggedIn && (
+          <p className="text-center text-xs text-muted-foreground">
+            Already registered?{" "}
+            <Link
+              to="/business/login"
+              className="text-gold hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
+        )}
       </form>
     </div>
   );

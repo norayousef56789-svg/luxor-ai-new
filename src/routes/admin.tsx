@@ -32,7 +32,12 @@ function AdminGate() {
   });
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", search: { redirect: "/admin", mode: "signin" } });
+    navigate({
+  to: "/auth",
+  search: {
+    redirect: "/admin",
+  },
+});
   }, [loading, user, navigate]);
 
   if (!user) return null;
