@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   LogOut,
@@ -15,6 +16,7 @@ import {
   Store,
   Check,
 } from "lucide-react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -50,6 +52,7 @@ type Tab =
 
 function Dashboard() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, loading, roles } = useAuth();
 
   const [tab, setTab] = useState<Tab>("businesses");
@@ -58,13 +61,11 @@ function Dashboard() {
   // =========================================================
   // BUSINESS DASHBOARD ACCESS PROTECTION
   // =========================================================
+
   useEffect(() => {
     if (loading) return;
 
-    // 1. المستخدم غير مسجل دخول
     if (!user) {
-      console.log("NO USER -> BUSINESS LOGIN");
-
       void navigate({
         to: "/business/login",
       });
@@ -72,16 +73,7 @@ function Dashboard() {
       return;
     }
 
-    // 2. المستخدم مسجل دخول ولكن ليس Business
     if (!roles.includes("business")) {
-      console.log(
-        "UNAUTHORIZED BUSINESS DASHBOARD ACCESS:",
-        {
-          email: user.email,
-          roles,
-        },
-      );
-
       void navigate({
         to: "/",
       });
@@ -89,11 +81,11 @@ function Dashboard() {
   }, [loading, user, roles, navigate]);
 
   // =========================================================
-  // LOAD ONLY THE CURRENT BUSINESS OWNER'S BUSINESSES
+  // LOAD CURRENT BUSINESS OWNER BUSINESSES
   // =========================================================
+
   const {
     data: businesses,
-    error: businessesError,
   } = useQuery({
     queryKey: ["my-businesses", user?.id],
 
@@ -109,26 +101,18 @@ function Dashboard() {
         });
 
       if (error) {
-        console.error(
-          "BUSINESSES ERROR:",
-          error,
-        );
-
+        console.error("BUSINESSES ERROR:", error);
         throw error;
       }
-
-      console.log(
-        "MY BUSINESSES:",
-        data,
-      );
 
       return data;
     },
   });
 
   // =========================================================
-  // SELECT FIRST BUSINESS AUTOMATICALLY
+  // SELECT FIRST BUSINESS
   // =========================================================
+
   useEffect(() => {
     if (
       businesses &&
@@ -146,18 +130,17 @@ function Dashboard() {
   }, [businesses, selectedId]);
 
   // =========================================================
-  // WAIT UNTIL AUTH CHECK IS COMPLETE
+  // AUTH WAIT
   // =========================================================
+
   if (loading) {
     return null;
   }
 
-  // No user
   if (!user) {
     return null;
   }
 
-  // User is logged in but is NOT a business owner
   if (!roles.includes("business")) {
     return null;
   }
@@ -169,23 +152,26 @@ function Dashboard() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
+
       {/* =====================================================
           HEADER
       ====================================================== */}
+
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <p className="text-gold text-xs uppercase tracking-[0.3em]">
-            Business portal
+            {t("businessDashboard.portal")}
           </p>
 
           <h1 className="font-display text-3xl mt-1">
-            Welcome,{" "}
+            {t("businessDashboard.welcome")},{" "}
             {user.user_metadata?.full_name ??
               user.email}
           </h1>
 
           <p className="text-sm text-muted-foreground">
-            Business owner · {user.email}
+            {t("businessDashboard.businessOwner")} ·{" "}
+            {user.email}
           </p>
         </div>
 
@@ -200,13 +186,15 @@ function Dashboard() {
           className="inline-flex items-center gap-2 rounded-full border border-border/60 px-4 py-2 text-sm hover:border-gold/40"
         >
           <LogOut className="h-4 w-4" />
-          Sign out
+
+          {t("businessDashboard.signOut")}
         </button>
       </div>
 
       {/* =====================================================
           BUSINESS SWITCHER
       ====================================================== */}
+
       {(businesses ?? []).length > 1 && (
         <div className="mt-6 flex flex-wrap gap-2">
           {businesses!.map((b) => (
@@ -223,7 +211,10 @@ function Dashboard() {
             >
               {b.name}{" "}
               <span className="opacity-50">
-                · {b.status}
+                ·{" "}
+                {t(
+                  `businessDashboard.status.${b.status}`,
+                )}
               </span>
             </button>
           ))}
@@ -233,33 +224,34 @@ function Dashboard() {
       {/* =====================================================
           NAVIGATION TABS
       ====================================================== */}
+
       <nav className="mt-8 flex flex-wrap gap-2 border-b border-border/60 pb-3">
         {(
           [
             [
               "businesses",
               Store,
-              "My listings",
+              t("businessDashboard.tabs.listings"),
             ],
             [
               "profile",
               User,
-              "Profile",
+              t("businessDashboard.tabs.profile"),
             ],
             [
               "offers",
               Tag,
-              "Offers",
+              t("businessDashboard.tabs.offers"),
             ],
             [
               "stats",
               BarChart3,
-              "Analytics",
+              t("businessDashboard.tabs.analytics"),
             ],
             [
               "marketing",
               Sparkles,
-              "AI Marketing Studio",
+              t("businessDashboard.tabs.marketing"),
             ],
           ] as const
         ).map(
@@ -276,6 +268,7 @@ function Dashboard() {
               }`}
             >
               <Icon className="h-4 w-4" />
+
               {label}
             </button>
           ),
@@ -285,7 +278,9 @@ function Dashboard() {
       {/* =====================================================
           TAB CONTENT
       ====================================================== */}
+
       <div className="mt-8">
+
         {tab === "businesses" && (
           <BusinessesTab
             businesses={businesses ?? []}
@@ -320,6 +315,10 @@ function Dashboard() {
             <EmptyState />
           ))}
 
+        {/* =================================================
+            MARKETING STUDIO — DO NOT REMOVE
+        ================================================= */}
+
         {tab === "marketing" &&
           (selected ? (
             <MarketingStudio
@@ -341,12 +340,14 @@ function Dashboard() {
 // =============================================================
 
 function EmptyState() {
+  const { t } = useTranslation();
+
   return (
     <div className="text-center py-16">
       <Store className="h-10 w-10 mx-auto text-gold/40 mb-4" />
 
       <p className="text-muted-foreground">
-        Add a business listing to unlock this tab.
+        {t("businessDashboard.emptyState")}
       </p>
     </div>
   );
@@ -363,6 +364,7 @@ function BusinessesTab({
   businesses: Business[];
   ownerId: string;
 }) {
+  const { t } = useTranslation();
   const qc = useQueryClient();
 
   const [open, setOpen] =
@@ -435,7 +437,7 @@ function BusinessesTab({
   ) => {
     if (
       !confirm(
-        "Delete this listing?",
+        t("businessDashboard.confirmDelete"),
       )
     ) {
       return;
@@ -453,9 +455,10 @@ function BusinessesTab({
 
   return (
     <div className="space-y-6">
+
       <div className="flex items-center justify-between">
         <h2 className="font-display text-2xl">
-          My listings
+          {t("businessDashboard.myListings")}
         </h2>
 
         <button
@@ -467,8 +470,8 @@ function BusinessesTab({
           <Plus className="h-4 w-4" />
 
           {open
-            ? "Cancel"
-            : "Add listing"}
+            ? t("businessDashboard.cancel")
+            : t("businessDashboard.addListing")}
         </button>
       </div>
 
@@ -477,8 +480,11 @@ function BusinessesTab({
           onSubmit={submit}
           className="rounded-2xl border border-border/60 bg-card/60 p-6 grid gap-4 md:grid-cols-2"
         >
+
           <div className="space-y-2 md:col-span-2">
-            <Label>Name</Label>
+            <Label>
+              {t("businessDashboard.form.name")}
+            </Label>
 
             <Input
               value={form.name}
@@ -493,7 +499,9 @@ function BusinessesTab({
           </div>
 
           <div className="space-y-2">
-            <Label>Type</Label>
+            <Label>
+              {t("businessDashboard.form.type")}
+            </Label>
 
             <select
               value={form.type}
@@ -506,20 +514,23 @@ function BusinessesTab({
               }
               className="flex h-9 w-full rounded-md border border-input bg-card px-3 text-sm"
             >
-              {TYPES.map(
-                (t) => (
-                  <option
-                    key={t}
-                  >
-                    {t}
-                  </option>
-                ),
-              )}
+              {TYPES.map((type) => (
+                <option
+                  key={type}
+                  value={type}
+                >
+                  {t(
+                    `businessDashboard.types.${type}`,
+                  )}
+                </option>
+              ))}
             </select>
           </div>
 
           <div className="space-y-2">
-            <Label>Phone</Label>
+            <Label>
+              {t("businessDashboard.form.phone")}
+            </Label>
 
             <Input
               value={form.phone}
@@ -534,7 +545,9 @@ function BusinessesTab({
           </div>
 
           <div className="space-y-2">
-            <Label>Email</Label>
+            <Label>
+              {t("businessDashboard.form.email")}
+            </Label>
 
             <Input
               type="email"
@@ -550,7 +563,9 @@ function BusinessesTab({
           </div>
 
           <div className="space-y-2">
-            <Label>Address</Label>
+            <Label>
+              {t("businessDashboard.form.address")}
+            </Label>
 
             <Input
               value={form.address}
@@ -565,12 +580,12 @@ function BusinessesTab({
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label>Description</Label>
+            <Label>
+              {t("businessDashboard.form.description")}
+            </Label>
 
             <Textarea
-              value={
-                form.description
-              }
+              value={form.description}
               onChange={(e) =>
                 setForm({
                   ...form,
@@ -592,13 +607,14 @@ function BusinessesTab({
             className="md:col-span-2 rounded-full bg-gradient-gold px-4 py-2 text-sm text-primary-foreground shadow-gold disabled:opacity-60"
           >
             {busy
-              ? "Submitting…"
-              : "Submit for approval"}
+              ? t("businessDashboard.submitting")
+              : t("businessDashboard.submitApproval")}
           </button>
         </form>
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
+
         {businesses.map(
           (b) => (
             <div
@@ -606,13 +622,16 @@ function BusinessesTab({
               className="rounded-2xl border border-border/60 bg-card/50 p-5"
             >
               <div className="flex items-start justify-between">
+
                 <div>
                   <h3 className="font-display text-xl">
                     {b.name}
                   </h3>
 
                   <div className="text-xs text-gold uppercase tracking-widest mt-0.5">
-                    {b.type}
+                    {t(
+                      `businessDashboard.types.${b.type}`,
+                    )}
                   </div>
                 </div>
 
@@ -626,6 +645,7 @@ function BusinessesTab({
               </p>
 
               <div className="mt-3 flex gap-2">
+
                 {b.status ===
                   "approved" && (
                   <Link
@@ -635,7 +655,10 @@ function BusinessesTab({
                     }}
                     className="text-xs text-gold hover:underline"
                   >
-                    View public page →
+                    {t(
+                      "businessDashboard.viewPublicPage",
+                    )}{" "}
+                    →
                   </Link>
                 )}
 
@@ -647,6 +670,7 @@ function BusinessesTab({
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
+
               </div>
             </div>
           ),
@@ -655,12 +679,11 @@ function BusinessesTab({
         {businesses.length ===
           0 &&
           !open && (
-            <p className="md:col-span-2 text-center text-muted-foreground py-12">
-              No listings yet —
-              click "Add listing"
-              to get started.
-            </p>
-          )}
+          <p className="md:col-span-2 text-center text-muted-foreground py-12">
+            {t("businessDashboard.noListings")}
+          </p>
+        )}
+
       </div>
     </div>
   );
@@ -675,6 +698,8 @@ function StatusBadge({
 }: {
   status: Business["status"];
 }) {
+  const { t } = useTranslation();
+
   const cls =
     status === "approved"
       ? "border-gold/40 text-gold"
@@ -686,7 +711,9 @@ function StatusBadge({
     <span
       className={`text-[10px] uppercase tracking-widest rounded-full px-2 py-0.5 border ${cls}`}
     >
-      {status}
+      {t(
+        `businessDashboard.status.${status}`,
+      )}
     </span>
   );
 }
@@ -700,6 +727,7 @@ function ProfileTab({
 }: {
   business: Business;
 }) {
+  const { t } = useTranslation();
   const qc = useQueryClient();
 
   const [form, setForm] =
@@ -766,13 +794,15 @@ function ProfileTab({
       onSubmit={save}
       className="grid gap-5 max-w-2xl"
     >
+
       <h2 className="font-display text-2xl">
-        Profile — {business.name}
+        {t("businessDashboard.profileTitle")} —{" "}
+        {business.name}
       </h2>
 
       <div className="space-y-2">
         <Label>
-          Business name
+          {t("businessDashboard.form.businessName")}
         </Label>
 
         <Input
@@ -787,8 +817,11 @@ function ProfileTab({
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
+
         <div className="space-y-2">
-          <Label>Phone</Label>
+          <Label>
+            {t("businessDashboard.form.phone")}
+          </Label>
 
           <Input
             value={form.phone}
@@ -802,7 +835,9 @@ function ProfileTab({
         </div>
 
         <div className="space-y-2">
-          <Label>Email</Label>
+          <Label>
+            {t("businessDashboard.form.email")}
+          </Label>
 
           <Input
             value={form.email}
@@ -814,10 +849,13 @@ function ProfileTab({
             }
           />
         </div>
+
       </div>
 
       <div className="space-y-2">
-        <Label>Address</Label>
+        <Label>
+          {t("businessDashboard.form.address")}
+        </Label>
 
         <Input
           value={form.address}
@@ -832,7 +870,7 @@ function ProfileTab({
 
       <div className="space-y-2">
         <Label>
-          Cover image URL
+          {t("businessDashboard.form.coverImage")}
         </Label>
 
         <Input
@@ -850,7 +888,7 @@ function ProfileTab({
 
       <div className="space-y-2">
         <Label>
-          Description
+          {t("businessDashboard.form.description")}
         </Label>
 
         <Textarea
@@ -869,16 +907,19 @@ function ProfileTab({
       </div>
 
       <div className="flex items-center gap-3">
+
         <button className="rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-gold">
-          Save changes
+          {t("businessDashboard.saveChanges")}
         </button>
 
         {saved && (
           <span className="text-sm text-gold inline-flex items-center gap-1">
             <Check className="h-4 w-4" />
-            Saved
+
+            {t("businessDashboard.saved")}
           </span>
         )}
+
       </div>
     </form>
   );
@@ -893,6 +934,7 @@ function OffersTab({
 }: {
   business: Business;
 }) {
+  const { t } = useTranslation();
   const qc = useQueryClient();
 
   const { data: offers } =
@@ -1015,17 +1057,22 @@ function OffersTab({
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr,1.2fr]">
+
       <form
         onSubmit={submit}
         className="space-y-4 rounded-2xl border border-border/60 bg-card/50 p-6 h-fit"
       >
+
         <h2 className="font-display text-xl flex items-center gap-2">
           <Plus className="h-4 w-4 text-gold" />
-          New offer
+
+          {t("businessDashboard.newOffer")}
         </h2>
 
         <div className="space-y-2">
-          <Label>Title</Label>
+          <Label>
+            {t("businessDashboard.form.title")}
+          </Label>
 
           <Input
             value={form.title}
@@ -1035,13 +1082,15 @@ function OffersTab({
                 title: e.target.value,
               })
             }
-            placeholder="Sunset tasting menu"
+            placeholder={t(
+              "businessDashboard.form.offerPlaceholder",
+            )}
           />
         </div>
 
         <div className="space-y-2">
           <Label>
-            Description
+            {t("businessDashboard.form.description")}
           </Label>
 
           <Textarea
@@ -1059,9 +1108,10 @@ function OffersTab({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
+
           <div className="space-y-2">
             <Label>
-              Discount
+              {t("businessDashboard.form.discount")}
             </Label>
 
             <Input
@@ -1081,7 +1131,7 @@ function OffersTab({
 
           <div className="space-y-2">
             <Label>
-              Valid until
+              {t("businessDashboard.form.validUntil")}
             </Label>
 
             <Input
@@ -1098,24 +1148,30 @@ function OffersTab({
               }
             />
           </div>
+
         </div>
 
         <button className="w-full rounded-full bg-gradient-gold px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-gold">
-          Publish offer
+          {t("businessDashboard.publishOffer")}
         </button>
+
       </form>
 
       <div className="space-y-4">
+
         <h2 className="font-display text-xl">
-          Active & past offers (
-          {offers?.length ?? 0}
-          )
+          {t(
+            "businessDashboard.activePastOffers",
+          )}{" "}
+          ({offers?.length ?? 0})
         </h2>
 
         {(offers ?? [])
           .length === 0 && (
           <p className="text-sm text-muted-foreground">
-            No offers yet.
+            {t(
+              "businessDashboard.noOffers",
+            )}
           </p>
         )}
 
@@ -1125,8 +1181,11 @@ function OffersTab({
               key={o.id}
               className="rounded-xl border border-border/60 bg-card/50 p-5"
             >
+
               <div className="flex items-start justify-between gap-3">
+
                 <div>
+
                   <div className="text-sm text-gold font-semibold">
                     {o.discount} ·{" "}
                     {o.title}
@@ -1138,15 +1197,17 @@ function OffersTab({
 
                   {o.valid_until && (
                     <p className="text-xs text-muted-foreground mt-2">
-                      Valid until{" "}
-                      {
-                        o.valid_until
-                      }
+                      {t(
+                        "businessDashboard.validUntil",
+                      )}{" "}
+                      {o.valid_until}
                     </p>
                   )}
+
                 </div>
 
                 <div className="flex items-center gap-2">
+
                   <button
                     onClick={() =>
                       toggle(o)
@@ -1158,8 +1219,12 @@ function OffersTab({
                     }`}
                   >
                     {o.active
-                      ? "Active"
-                      : "Paused"}
+                      ? t(
+                          "businessDashboard.active",
+                        )
+                      : t(
+                          "businessDashboard.paused",
+                        )}
                   </button>
 
                   <button
@@ -1170,6 +1235,7 @@ function OffersTab({
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
+
                 </div>
               </div>
             </div>
@@ -1189,6 +1255,8 @@ function StatsTab({
 }: {
   business: Business;
 }) {
+  const { t } = useTranslation();
+
   const { data: visits } =
     useQuery({
       queryKey: [
@@ -1301,46 +1369,59 @@ function StatsTab({
 
   return (
     <div className="space-y-8">
+
       <h2 className="font-display text-2xl">
-        Analytics —{" "}
+        {t("businessDashboard.analytics")} —{" "}
         {business.name}
       </h2>
 
       <div className="grid gap-4 sm:grid-cols-3">
+
         <StatCard
           icon={Eye}
-          label="Profile views (14d)"
+          label={t(
+            "businessDashboard.profileViews14d",
+          )}
           value={total}
         />
 
         <StatCard
           icon={TrendingUp}
-          label="Last 7 days"
+          label={t(
+            "businessDashboard.last7Days",
+          )}
           value={last7}
         />
 
         <StatCard
           icon={Users}
-          label="Avg per day"
+          label={t(
+            "businessDashboard.avgPerDay",
+          )}
           value={Math.round(
             total / 14,
           )}
         />
+
       </div>
 
       <div className="rounded-2xl border border-border/60 bg-card/50 p-6">
+
         <h3 className="font-display text-lg">
-          Daily visits — last
-          14 days
+          {t(
+            "businessDashboard.dailyVisits",
+          )}
         </h3>
 
         <div className="mt-5 flex items-end gap-2 h-44">
+
           {buckets.map(
             (d) => (
               <div
                 key={d.day}
                 className="flex-1 flex flex-col items-center gap-1"
               >
+
                 <div
                   className="w-full bg-gradient-gold rounded-t-md"
                   style={{
@@ -1351,15 +1432,19 @@ function StatsTab({
                     }%`,
                     minHeight: 2,
                   }}
-                  title={`${d.visits} visits`}
+                  title={`${d.visits} ${t(
+                    "businessDashboard.visits",
+                  )}`}
                 />
 
                 <div className="text-[10px] text-muted-foreground">
                   {d.day}
                 </div>
+
               </div>
             ),
           )}
+
         </div>
       </div>
     </div>
@@ -1381,17 +1466,21 @@ function StatCard({
 }) {
   return (
     <div className="rounded-2xl border border-border/60 bg-card/50 p-5">
+
       <div className="flex items-center gap-2 text-gold">
+
         <Icon className="h-4 w-4" />
 
         <span className="text-xs uppercase tracking-widest">
           {label}
         </span>
+
       </div>
 
       <div className="mt-3 font-display text-3xl text-gradient-gold">
         {value}
       </div>
+
     </div>
   );
 }

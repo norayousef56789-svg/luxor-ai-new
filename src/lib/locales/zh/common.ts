@@ -100,4 +100,5 @@ export const common: Record<string, string> = {
   "home.mapText":
     "卢克索横跨尼罗河两岸 — 东岸是生者的神庙，西岸是永恒的陵墓。互动地图标注了每个景点。",
   "home.mapCta": "打开互动地图",
+  "mapTitle": "卢克索互动地图",
 };

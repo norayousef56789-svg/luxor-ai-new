@@ -102,4 +102,5 @@ export const common: Record<string, string> = {
   "home.mapText":
     "Luxor lives on two sides of the Nile — the living temples on the east, the eternal tombs on the west. Our interactive map plots every site.",
   "home.mapCta": "Open interactive map",
+  "mapTitle": "Interactive Map of Luxor",
 };
