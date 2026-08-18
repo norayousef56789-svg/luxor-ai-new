@@ -11,7 +11,6 @@
   "signIn": "تسجيل الدخول",
   "signOut": "تسجيل الخروج",
   "admin": "لوحة الإدارة",
-  "businessDashboard": "لوحة النشاط التجاري",
   "continueWithGoogle": "المتابعة باستخدام جوجل",
 
   "heroBadge": "سياحة ذكية + تسويق بالذكاء الاصطناعي · الأقصر، مصر",
@@ -90,14 +89,93 @@
 
   "returnHome": "العودة إلى الرئيسية",
   "viewDetails": "عرض التفاصيل",
+
   "hotelsEyebrow": "أماكن الإقامة",
-"hotelsTitle": "فنادق الأقصر",
-"hotelsSubtitle": "قصور تاريخية على الكورنيش، وفنادق بوتيك في الضفة الغربية، ومنتجعات مريحة بإطلالات ساحرة على المعابد.",
-"eventsEyebrow": "ما يحدث في الأقصر",
-"businessDirectoryEyebrow": "دليل الأنشطة التجارية",
-"businessDirectoryTitle": "أفضل أنشطة الأقصر في مكان واحد",
-"businessDirectoryDescription": "فنادق على النيل، مطاعم مميزة، بازارّات الحرف اليدوية وشركات سياحية موثوقة — جميعها موثقة على Luxor AI.",
-"all": "الكل",
-"noVerifiedBusinesses": "لا توجد أنشطة تجارية موثقة في هذه الفئة حتى الآن.",
-"bazaarseyebrow": "بازار سي برو"
+  "hotelsTitle": "فنادق الأقصر",
+  "hotelsSubtitle": "قصور تاريخية على الكورنيش، وفنادق بوتيك في الضفة الغربية، ومنتجعات مريحة بإطلالات ساحرة على المعابد.",
+
+  "eventsEyebrow": "ما يحدث في الأقصر",
+
+  "businessDirectoryEyebrow": "دليل الأنشطة التجارية",
+  "businessDirectoryTitle": "أفضل أنشطة الأقصر في مكان واحد",
+  "businessDirectoryDescription": "فنادق على النيل، مطاعم مميزة، بازارات الحرف اليدوية وشركات سياحية موثوقة — جميعها موثقة على Luxor AI.",
+
+  "all": "الكل",
+  "noVerifiedBusinesses": "لا توجد أنشطة تجارية موثقة في هذه الفئة حتى الآن.",
+  "bazaarseyebrow": "بازار سي برو",
+
+  "businessDashboard": {
+    "portal": "بوابة الأنشطة التجارية",
+    "welcome": "مرحبًا",
+    "businessOwner": "صاحب نشاط تجاري",
+    "signOut": "تسجيل الخروج",
+
+    "myListings": "أنشطتي التجارية",
+    "addListing": "إضافة نشاط",
+    "cancel": "إلغاء",
+
+    "emptyState": "أضف نشاطًا تجاريًا لفتح هذه الأقسام.",
+    "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا النشاط؟",
+
+    "viewPublicPage": "عرض الصفحة العامة",
+    "noListings": "لا توجد أنشطة تجارية حتى الآن.",
+
+    "submitApproval": "إرسال للمراجعة",
+    "submitting": "جارٍ الإرسال…",
+
+    "profileTitle": "الملف الشخصي",
+    "saveChanges": "حفظ التغييرات",
+    "saved": "تم الحفظ",
+
+    "newOffer": "عرض جديد",
+    "publishOffer": "نشر العرض",
+    "activePastOffers": "العروض الحالية والسابقة",
+    "noOffers": "لا توجد عروض حتى الآن.",
+    "validUntil": "صالح حتى",
+    "active": "نشط",
+    "paused": "متوقف",
+
+    "analytics": "التحليلات",
+    "profileViews14d": "مشاهدات الملف خلال 14 يومًا",
+    "last7Days": "آخر 7 أيام",
+    "avgPerDay": "المتوسط اليومي",
+    "dailyVisits": "الزيارات اليومية — آخر 14 يومًا",
+    "visits": "زيارة",
+
+    "tabs": {
+      "listings": "أنشطتي",
+      "profile": "الملف الشخصي",
+      "offers": "العروض",
+      "analytics": "التحليلات",
+      "marketing": "استوديو التسويق بالذكاء الاصطناعي"
+    },
+
+    "form": {
+      "name": "اسم النشاط",
+      "businessName": "اسم النشاط التجاري",
+      "type": "نوع النشاط",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "address": "العنوان",
+      "description": "الوصف",
+      "coverImage": "رابط صورة الغلاف",
+      "title": "عنوان العرض",
+      "offerPlaceholder": "قائمة غروب الشمس",
+      "discount": "الخصم",
+      "validUntil": "صالح حتى"
+    },
+
+    "types": {
+      "Hotel": "فندق",
+      "Restaurant": "مطعم",
+      "Bazaar": "بازار",
+      "Tour Company": "شركة سياحية"
+    },
+
+    "status": {
+      "approved": "تمت الموافقة",
+      "pending": "قيد المراجعة",
+      "rejected": "مرفوض"
+    }
+  }
 }

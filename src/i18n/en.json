@@ -11,7 +11,6 @@
   "signIn": "Sign In",
   "signOut": "Sign Out",
   "admin": "Admin",
-  "businessDashboard": "Business Dashboard",
   "continueWithGoogle": "Continue with Google",
 
   "heroBadge": "Smart tourism + AI marketing · Luxor, Egypt",
@@ -90,10 +89,93 @@
 
   "returnHome": "Return home",
   "viewDetails": "View details",
+
+  "hotelsEyebrow": "ACCOMMODATION",
+  "hotelsTitle": "Hotels of Luxor",
+  "hotelsSubtitle": "Historic palaces along the Corniche, boutique hotels on the West Bank and relaxing resorts with stunning temple views.",
+
   "eventsEyebrow": "WHAT'S ON",
+
   "businessDirectoryEyebrow": "BUSINESS DIRECTORY",
-"businessDirectoryTitle": "Luxor's finest, in one place",
-"businessDirectoryDescription": "Hotels along the Nile, candlelit rooftops, artisan bazaars and Egyptologist-led tour companies — all verified on Luxor AI.",
-"all": "All",
-"noVerifiedBusinesses": "No verified businesses in this category yet."
+  "businessDirectoryTitle": "Luxor's finest, in one place",
+  "businessDirectoryDescription": "Hotels along the Nile, standout restaurants, artisan bazaars and trusted tour companies — all verified on Luxor AI.",
+
+  "all": "All",
+  "noVerifiedBusinesses": "No verified businesses in this category yet.",
+  "bazaarseyebrow": "BAZAAR C PRO",
+
+  "businessDashboard": {
+    "portal": "Business Portal",
+    "welcome": "Welcome",
+    "businessOwner": "Business Owner",
+    "signOut": "Sign Out",
+
+    "myListings": "My Businesses",
+    "addListing": "Add Business",
+    "cancel": "Cancel",
+
+    "emptyState": "Add a business to unlock these sections.",
+    "confirmDelete": "Are you sure you want to delete this business?",
+
+    "viewPublicPage": "View public page",
+    "noListings": "No businesses yet.",
+
+    "submitApproval": "Submit for review",
+    "submitting": "Submitting…",
+
+    "profileTitle": "Business Profile",
+    "saveChanges": "Save changes",
+    "saved": "Saved",
+
+    "newOffer": "New Offer",
+    "publishOffer": "Publish Offer",
+    "activePastOffers": "Current & Past Offers",
+    "noOffers": "No offers yet.",
+    "validUntil": "Valid until",
+    "active": "Active",
+    "paused": "Paused",
+
+    "analytics": "Analytics",
+    "profileViews14d": "Profile views in the last 14 days",
+    "last7Days": "Last 7 days",
+    "avgPerDay": "Average per day",
+    "dailyVisits": "Daily visits — Last 14 days",
+    "visits": "visits",
+
+    "tabs": {
+      "listings": "My Businesses",
+      "profile": "Profile",
+      "offers": "Offers",
+      "analytics": "Analytics",
+      "marketing": "AI Marketing Studio"
+    },
+
+    "form": {
+      "name": "Business Name",
+      "businessName": "Business Name",
+      "type": "Business Type",
+      "phone": "Phone Number",
+      "email": "Email Address",
+      "address": "Address",
+      "description": "Description",
+      "coverImage": "Cover Image URL",
+      "title": "Offer Title",
+      "offerPlaceholder": "Sunset Menu",
+      "discount": "Discount",
+      "validUntil": "Valid Until"
+    },
+
+    "types": {
+      "Hotel": "Hotel",
+      "Restaurant": "Restaurant",
+      "Bazaar": "Bazaar",
+      "Tour Company": "Tour Company"
+    },
+
+    "status": {
+      "approved": "Approved",
+      "pending": "Pending Review",
+      "rejected": "Rejected"
+    }
+  }
 }
